@@ -40,6 +40,10 @@ public class MainActivity extends FragmentActivity{
     private static final LatLng PENFIELD_LIBRARY = new LatLng(43.454309, -76.543996);
     private static final LatLng SHINEMAN = new LatLng(43.454282, -76.539160);
 
+    //BUS STOPS
+    private static final LatLng MACKIN = new LatLng(43.454804, -76.53475284576416);
+    private static final LatLng JOHNSON = new LatLng(43.45713231914716, -76.53761744499207);
+    private static final LatLng LIBRARY = new LatLng(43.45426628708711, -76.54450535774231);
     private static final LatLng MARY_WALKER = new LatLng(43.455475, -76.542743);
 
 
@@ -134,10 +138,14 @@ public class MainActivity extends FragmentActivity{
 
 
         // Creating MarkerOptions
-        MarkerOptions markerDest = new MarkerOptions();
         MarkerOptions markerOrigin = new MarkerOptions();
 
-        MarkerOptions busStop = new MarkerOptions();
+        MarkerOptions busStop1 = new MarkerOptions();
+        MarkerOptions busStop2 = new MarkerOptions();
+        MarkerOptions busStop3 = new MarkerOptions();
+        MarkerOptions busStop4 = new MarkerOptions();
+        MarkerOptions busStop5 = new MarkerOptions();
+        MarkerOptions busStop6 = new MarkerOptions();
 
         // Setting the position of the marker
 
@@ -145,9 +153,30 @@ public class MainActivity extends FragmentActivity{
                     .title("Origin")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
-        busStop.position(MARY_WALKER) //Destination
+        busStop1.position(MACKIN) //Destination
                 .title("Bus Stop: Mary Walker")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+
+        busStop2.position(JOHNSON) //Destination
+                .title("Bus Stop: Mary Walker")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+
+        busStop3.position(MARY_WALKER) //Destination
+                .title("Bus Stop: Mary Walker")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+
+        busStop4.position(LIBRARY) //Destination
+                .title("Bus Stop: Mary Walker")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+
+        busStop5.position(ONONDAGA) //Destination
+                .title("Bus Stop: Mary Walker")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+
+        busStop6.position(VILLAGE) //Destination
+                .title("Bus Stop: Mary Walker")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+
 
                 /**
                  * For the start location, the color of marker is GREEN and
@@ -169,9 +198,14 @@ public class MainActivity extends FragmentActivity{
 
 
         // Add new marker to the Google Map Android API V2
-        map.addMarker(markerDest);
         map.addMarker(markerOrigin);
-        map.addMarker(busStop);
+        map.addMarker(busStop1);
+        map.addMarker(busStop2);
+        map.addMarker(busStop3);
+        map.addMarker(busStop4);
+        map.addMarker(busStop5);
+        map.addMarker(busStop6);
+
     }
     private String getDirectionsUrl(LatLng origin,LatLng dest){
 
