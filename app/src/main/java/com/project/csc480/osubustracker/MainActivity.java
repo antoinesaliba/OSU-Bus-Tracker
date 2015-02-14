@@ -143,15 +143,11 @@ public class MainActivity extends FragmentActivity{
 
         markerOrigin.position(CAMPUS_CENTER)  //Origin
                     .title("Origin")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-
-        markerDest.position(CAMPUS_CENTER) //Destination
-                  .title("Destination")
-                  .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
         busStop.position(MARY_WALKER) //Destination
                 .title("Bus Stop: Mary Walker")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
                 /**
                  * For the start location, the color of marker is GREEN and
