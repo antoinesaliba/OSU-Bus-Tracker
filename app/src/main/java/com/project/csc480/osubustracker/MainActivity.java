@@ -25,11 +25,14 @@ import org.json.JSONObject;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Switch;
+import android.widget.ToggleButton;
 
 public class MainActivity extends FragmentActivity{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     ArrayList<LatLng> markerPoints;
+
 
     private static final LatLng CAMPUS_CENTER = new LatLng(43.453838, -76.540628);
     private static final LatLng CIRCLE = new LatLng(43.453523, -76.541181);
@@ -61,6 +64,7 @@ public class MainActivity extends FragmentActivity{
 
         // Getting reference to SupportMapFragment of the activity_main
         SupportMapFragment fm = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        Switch bt = (Switch) findViewById(R.id.switch1);
         Log.i("MainActivity", "Setup passed...");
     }
 
