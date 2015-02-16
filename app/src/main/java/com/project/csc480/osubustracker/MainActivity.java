@@ -25,10 +25,12 @@ import org.json.JSONObject;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.ToggleButton;
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     ArrayList<LatLng> markerPoints;
@@ -37,17 +39,27 @@ public class MainActivity extends FragmentActivity{
     private static final LatLng CAMPUS_CENTER = new LatLng(43.453838, -76.540628);
     private static final LatLng CIRCLE = new LatLng(43.453523, -76.541181);
     //private static final LatLng CAMPUS_CENTER = new LatLng(43.453793, -76.540730); //43.453933, -76.540344   43.453838, -76.540628
+
+    //BLUE ROUTE HIGHLIGHTING
     private static final LatLng ONONDAGA = new LatLng(43.450535, -76.549731);
     private static final LatLng RIGGS_HALL = new LatLng(43.457295865792744, -76.53929114341736);
     private static final LatLng VILLAGE = new LatLng(43.44699935247679, -76.54906511306763);
     private static final LatLng PENFIELD_LIBRARY = new LatLng(43.454309, -76.543996);
     private static final LatLng SHINEMAN = new LatLng(43.454282, -76.539160);
 
-    //BUS STOPS
+    //BLUE ROUTE BUS STOPS
     private static final LatLng MACKIN = new LatLng(43.454804, -76.53475284576416);
     private static final LatLng JOHNSON = new LatLng(43.45713231914716, -76.53761744499207);
     private static final LatLng LIBRARY = new LatLng(43.45426628708711, -76.54450535774231);
     private static final LatLng MARY_WALKER = new LatLng(43.455475, -76.542743);
+
+
+    //GREEN ROUTE HIGHLIGHTING
+    private static final LatLng FIFTHAVE = new LatLng(43.45357312306545, -76.53239250183105);
+    private static final LatLng ROMNEY = new LatLng(43.447918, -76.534195);
+    private static final LatLng LAKER = new LatLng(43.446368, -76.53462409973145);
+
+
 
 
     @Override
@@ -55,16 +67,27 @@ public class MainActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         markerPoints = new ArrayList<LatLng>();
         setUpMapIfNeeded();
 
 
-
-
         // Getting reference to SupportMapFragment of the activity_main
-        SupportMapFragment fm = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
-        Switch bt = (Switch) findViewById(R.id.switch1);
+        SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
+        Switch toggle = (Switch) findViewById(R.id.switch1);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                markerPoints = new ArrayList<LatLng>();
+                if (isChecked) {
+                    mMap.clear();
+                    enableGreenRoute(mMap);
+
+                } else {
+                    mMap.clear();
+                    enableBlueRoute(mMap);
+                }
+            }
+        });
         Log.i("MainActivity", "Setup passed...");
     }
 
@@ -98,6 +121,7 @@ public class MainActivity extends FragmentActivity{
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap(mMap);
+                enableBlueRoute(mMap);
             }
         }
     }
@@ -114,10 +138,13 @@ public class MainActivity extends FragmentActivity{
 
 
         //map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(CAMPUS_CENTER, (float)14.5));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(CAMPUS_CENTER, (float) 14.5));
         map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
 
+    }
+
+    public void enableBlueRoute(GoogleMap map) {
         // Already 10 locations with 8 waypoints and 1 start location and 1 end location.
         // Up to 8 waypoints are allowed in a query for non-business users
         if (markerPoints.size() >= 10) {
@@ -154,15 +181,15 @@ public class MainActivity extends FragmentActivity{
         // Setting the position of the marker
 
         markerOrigin.position(CAMPUS_CENTER)  //Origin
-                    .title("Origin")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+                .title("Origin")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
         busStop1.position(MACKIN) //Destination
-                .title("Bus Stop: Mary Walker")
+                .title("Bus Stop: ")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
         busStop2.position(JOHNSON) //Destination
-                .title("Bus Stop: Mary Walker")
+                .title("Bus Stop: ")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
         busStop3.position(MARY_WALKER) //Destination
@@ -170,23 +197,23 @@ public class MainActivity extends FragmentActivity{
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
         busStop4.position(LIBRARY) //Destination
-                .title("Bus Stop: Mary Walker")
+                .title("Bus Stop: ")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
         busStop5.position(ONONDAGA) //Destination
-                .title("Bus Stop: Mary Walker")
+                .title("Bus Stop: ")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
         busStop6.position(VILLAGE) //Destination
-                .title("Bus Stop: Mary Walker")
+                .title("Bus Stop: ")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
 
 
-                /**
-                 * For the start location, the color of marker is GREEN and
-                 * for the end location, the color of marker is RED and
-                 * for the rest of markers, the color is AZURE
-                 */
+        /**
+         * For the start location, the color of marker is GREEN and
+         * for the end location, the color of marker is RED and
+         * for the rest of markers, the color is AZURE
+         */
         if (markerPoints.size() >= 2) {
             LatLng origin = markerPoints.get(0);
             LatLng dest = markerPoints.get(1);
@@ -209,8 +236,76 @@ public class MainActivity extends FragmentActivity{
         map.addMarker(busStop4);
         map.addMarker(busStop5);
         map.addMarker(busStop6);
-
     }
+
+    public void enableGreenRoute(GoogleMap map) {
+        // Already 10 locations with 8 waypoints and 1 start location and 1 end location.
+        // Up to 8 waypoints are allowed in a query for non-business users
+        if (markerPoints.size() >= 10) {
+            return;
+        }
+
+        // Adding new item to the ArrayList
+        //Origin:
+        markerPoints.add(CAMPUS_CENTER);
+
+        //Destination:
+        markerPoints.add(CAMPUS_CENTER);
+
+        //Waypoints:
+        markerPoints.add(FIFTHAVE);
+        markerPoints.add(ROMNEY);
+        markerPoints.add(LAKER);
+
+
+
+        // Creating MarkerOptions
+        MarkerOptions markerOrigin = new MarkerOptions();
+
+        MarkerOptions busStop1 = new MarkerOptions();
+        MarkerOptions busStop2 = new MarkerOptions();
+
+
+        // Setting the position of the marker
+
+        markerOrigin.position(CAMPUS_CENTER)  //Origin
+                .title("Origin")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+
+        busStop1.position(ROMNEY) //Destination
+                .title("Bus Stop: ")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+
+        busStop2.position(LAKER) //Destination
+                .title("Bus Stop: ")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
+
+
+        /**
+         * For the start location, the color of marker is GREEN and
+         * for the end location, the color of marker is RED and
+         * for the rest of markers, the color is AZURE
+         */
+        if (markerPoints.size() >= 2) {
+            LatLng origin = markerPoints.get(0);
+            LatLng dest = markerPoints.get(1);
+
+            // Getting URL to the Google Directions API
+            String url = getDirectionsUrl(origin, dest);
+
+            DownloadTask downloadTask = new DownloadTask();
+
+            // Start downloading json data from Google Directions API
+            downloadTask.execute(url);
+        }
+
+
+        // Add new marker to the Google Map Android API V2
+        map.addMarker(markerOrigin);
+        map.addMarker(busStop1);
+        map.addMarker(busStop2);
+    }
+
     private String getDirectionsUrl(LatLng origin,LatLng dest){
 
         // Origin of route
@@ -344,6 +439,7 @@ public class MainActivity extends FragmentActivity{
 
             ArrayList<LatLng> points = null;
             PolylineOptions lineOptions = null;
+            boolean green = false;
 
             // Traversing through all the routes
             for(int i=0;i<result.size();i++){
@@ -359,6 +455,9 @@ public class MainActivity extends FragmentActivity{
 
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
+                    if(lat==43.44636){
+                        green = true;
+                    }
                     LatLng position = new LatLng(lat, lng);
 
                     points.add(position);
@@ -367,7 +466,11 @@ public class MainActivity extends FragmentActivity{
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(6);
-                lineOptions.color(Color.BLUE);
+                if(green){
+                    lineOptions.color(Color.GREEN);
+                }else {
+                    lineOptions.color(Color.BLUE);
+                }
             }
 
             // Drawing polyline in the Google Map for the i-th route
