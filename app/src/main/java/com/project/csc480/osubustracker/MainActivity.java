@@ -6,6 +6,8 @@ import android.os.Bundle;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +36,7 @@ public class MainActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     ArrayList<LatLng> markerPoints;
+    boolean green; //used to tell the lineOptions to make the green route line green
 
 
     private static final LatLng CAMPUS_CENTER = new LatLng(43.453838, -76.540628);
@@ -68,6 +71,8 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
 
         markerPoints = new ArrayList<LatLng>();
+        green = false;
+
         setUpMapIfNeeded();
 
 
@@ -80,14 +85,17 @@ public class MainActivity extends FragmentActivity {
                 markerPoints = new ArrayList<LatLng>();
                 if (isChecked) {
                     mMap.clear();
+                    green = true; //used to tell the lineOptions to make the green route line green
                     enableGreenRoute(mMap);
 
                 } else {
                     mMap.clear();
+                    green = false;
                     enableBlueRoute(mMap);
                 }
             }
         });
+
         Log.i("MainActivity", "Setup passed...");
     }
 
@@ -439,7 +447,6 @@ public class MainActivity extends FragmentActivity {
 
             ArrayList<LatLng> points = null;
             PolylineOptions lineOptions = null;
-            boolean green = false;
 
             // Traversing through all the routes
             for(int i=0;i<result.size();i++){
@@ -455,9 +462,6 @@ public class MainActivity extends FragmentActivity {
 
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
-                    if(lat==43.44636){
-                        green = true;
-                    }
                     LatLng position = new LatLng(lat, lng);
 
                     points.add(position);
@@ -466,6 +470,7 @@ public class MainActivity extends FragmentActivity {
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(6);
+
                 if(green){
                     lineOptions.color(Color.GREEN);
                 }else {
