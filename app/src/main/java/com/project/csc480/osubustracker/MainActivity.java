@@ -1,5 +1,6 @@
 package com.project.csc480.osubustracker;
 
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -30,6 +31,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MainActivity extends FragmentActivity {
@@ -38,6 +40,7 @@ public class MainActivity extends FragmentActivity {
     ArrayList<LatLng> markerPoints;
     boolean green; //used to tell the lineOptions to make the green route line green
 
+    private Handler mHandler = new Handler();
 
     private static final LatLng CAMPUS_CENTER = new LatLng(43.453838, -76.540628);
     private static final LatLng CIRCLE = new LatLng(43.453523, -76.541181);
@@ -95,6 +98,14 @@ public class MainActivity extends FragmentActivity {
                 }
             }
         });
+
+        final Circle circle = mMap.addCircle(new CircleOptions()
+                .center(CAMPUS_CENTER)
+                .radius(5)
+                .strokeColor(Color.RED)
+                .fillColor(Color.RED)
+                .zIndex(1));
+
 
         Log.i("MainActivity", "Setup passed...");
     }
