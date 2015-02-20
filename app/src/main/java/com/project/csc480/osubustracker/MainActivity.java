@@ -1,6 +1,7 @@
 package com.project.csc480.osubustracker;
 
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -17,11 +19,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONObject;
 
@@ -40,7 +46,7 @@ public class MainActivity extends FragmentActivity {
     ArrayList<LatLng> markerPoints;
     boolean green; //used to tell the lineOptions to make the green route line green
 
-    private Handler mHandler = new Handler();
+    private final Handler handler = new Handler();
 
     private static final LatLng CAMPUS_CENTER = new LatLng(43.453838, -76.540628);
     private static final LatLng CIRCLE = new LatLng(43.453523, -76.541181);
@@ -66,6 +72,8 @@ public class MainActivity extends FragmentActivity {
     private static final LatLng LAKER = new LatLng(43.446368, -76.53462409973145);
 
 
+    ArrayList<LatLng> list = new ArrayList<LatLng>(10);
+    int c = 0;
 
 
     @Override
@@ -106,8 +114,37 @@ public class MainActivity extends FragmentActivity {
                 .fillColor(Color.RED)
                 .zIndex(1));
 
+        list.add(CAMPUS_CENTER);
+        list.add(MACKIN);
+        list.add(JOHNSON);
+        list.add(LIBRARY);
+        list.add(ONONDAGA);
+        list.add(VILLAGE);
+        list.add(LIBRARY);
+        list.add(SHINEMAN);
+        list.add(CAMPUS_CENTER);
+
+        Runnable m_handlerTask ;
+        m_handlerTask = new Runnable()
+        {
+            @Override
+            public void run() {
+
+                updateMarker(circle);
+                handler.postDelayed(this, 5000);
+
+            }
+        };
+        m_handlerTask.run();
 
         Log.i("MainActivity", "Setup passed...");
+    }
+
+    public void updateMarker(Circle circle){
+        if(c!=list.size()) {
+            circle.setCenter(list.get(c));
+            c++;
+        }
     }
 
     @Override
@@ -389,7 +426,7 @@ public class MainActivity extends FragmentActivity {
             br.close();
 
         }catch(Exception e){
-            Log.d("Exception while downloading url", e.toString());
+            Log.d("Error downloading url", e.toString());
         }finally{
             iStream.close();
             urlConnection.disconnect();
