@@ -48,6 +48,9 @@ public class MainActivity extends FragmentActivity {
 
     private final Handler handler = new Handler();
 
+    public BusRoute blue = new BusRoute("blueRoute");
+    
+
     private static final LatLng CAMPUS_CENTER = new LatLng(43.453838, -76.540628);
     private static final LatLng CIRCLE = new LatLng(43.453523, -76.541181);
     //private static final LatLng CAMPUS_CENTER = new LatLng(43.453793, -76.540730); //43.453933, -76.540344   43.453838, -76.540628
