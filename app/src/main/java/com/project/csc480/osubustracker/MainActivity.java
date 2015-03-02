@@ -35,10 +35,11 @@ import android.widget.Switch;
 public class MainActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    ArrayList<LatLng> markerPoints;
-    boolean green; //used to tell the lineOptions to make the green route line green
 
     private final Handler handler = new Handler();
+
+    RouteGenerator highlighter;
+
     int c = 0;
 
     @Override
@@ -46,8 +47,6 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        markerPoints = new ArrayList<LatLng>();
-        green = false;
 
         //Creating the Blue Route object and loading the route points and the bus stops
         final BusRoute blueRoute = new BusRoute("blueRoute");
@@ -63,33 +62,22 @@ public class MainActivity extends FragmentActivity {
 
         setUpMapIfNeeded();
 
-
         // Getting reference to SupportMapFragment of the activity_main
         SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         Switch toggle = (Switch) findViewById(R.id.switch1);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                markerPoints = new ArrayList<LatLng>();
                 if (isChecked) {
-                    mMap.clear();
-                    green = true; //used to tell the lineOptions to make the green route line green
-                    enableRoute(mMap, greenRoute);
+                    changeRoute(mMap, greenRoute, true);
 
                 } else {
-                    mMap.clear();
-                    green = false;
-                    enableRoute(mMap, blueRoute);
+                    changeRoute(mMap, blueRoute, false);
                 }
             }
         });
 
-        final Circle circle = mMap.addCircle(new CircleOptions()
-                .center(new LatLng(43.453838, -76.540628)) //CAMPUS CENTER
-                .radius(5)
-                .strokeColor(Color.RED)
-                .fillColor(Color.RED)
-                .zIndex(1));
+        final Circle circle = createCircle(mMap);
 
         Runnable m_handlerTask ;
         m_handlerTask = new Runnable()
@@ -107,11 +95,26 @@ public class MainActivity extends FragmentActivity {
         Log.i("MainActivity", "Setup passed...");
     }
 
+    public Circle createCircle(GoogleMap m){
+        return mMap.addCircle(new CircleOptions()
+                .center(new LatLng(43.453838, -76.540628)) //CAMPUS CENTER
+                .radius(5)
+                .strokeColor(Color.RED)
+                .fillColor(Color.RED)
+                .zIndex(1));
+    }
+
     public void updateMarker(Circle circle, Vehicle vehicle){
         if(c!=vehicle.getMapPosition().size()) {
             circle.setCenter(vehicle.getMapPosition().get(c));
             c++;
         }
+    }
+
+    public void changeRoute(GoogleMap m, BusRoute r, boolean g){
+        mMap.clear();
+        highlighter = new RouteGenerator(m);
+        highlighter.enableRoute(m, r, g);
     }
 
     @Override
@@ -144,11 +147,12 @@ public class MainActivity extends FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap(mMap);
+                highlighter = new RouteGenerator(mMap);
                 //Creating the Blue Route object and loading the route points and the bus stops
                 final BusRoute blueRoute = new BusRoute("blueRoute");
                 blueRoute.loadRoute();
                 blueRoute.loadBusStops();
-                enableRoute(mMap, blueRoute);
+                highlighter.enableRoute(mMap, blueRoute, false);
             }
         }
     }
@@ -167,211 +171,5 @@ public class MainActivity extends FragmentActivity {
         //map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
         map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-    }
-
-    public void enableRoute(GoogleMap map, BusRoute route) {
-        // Already 10 locations with 8 waypoints and 1 start location and 1 end location.
-        // Up to 8 waypoints are allowed in a query for non-business users
-        if (markerPoints.size() >= 10) {
-            return;
-        }
-        for(int i=0; i < route.getRoutePoints().size(); i++) {
-            markerPoints.add(route.getRoutePoints().get(i));
-        }
-
-        for(int i = 0; i < route.getBusStops().size(); i++) {
-            // Add new marker to the Google Map Android API V2
-            map.addMarker(new MarkerOptions()
-                         .position(route.getBusStops().get(i).getCoordinates())
-                         .title(route.getBusStops().get(i).getName())
-                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon)));
-        }
-
-        /**
-         * For the start location, the color of marker is GREEN and
-         * for the end location, the color of marker is RED and
-         * for the rest of markers, the color is AZURE
-         */
-        if (markerPoints.size() >= 2) {
-            LatLng origin = markerPoints.get(0);
-            LatLng dest = markerPoints.get(1);
-
-            // Getting URL to the Google Directions API
-            String url = getDirectionsUrl(origin, dest);
-
-            DownloadTask downloadTask = new DownloadTask();
-
-            // Start downloading json data from Google Directions API
-            downloadTask.execute(url);
-        }
-    }
-
-    private String getDirectionsUrl(LatLng origin,LatLng dest){
-
-        // Origin of route
-        String str_origin = "origin="+origin.latitude+","+origin.longitude;
-
-        // Destination of route
-        String str_dest = "destination="+dest.latitude+","+dest.longitude;
-
-        // Sensor enabled
-        String sensor = "sensor=false";
-
-        // Waypoints
-        String waypoints = "";
-        for(int i=2;i<markerPoints.size();i++){
-            LatLng point  = (LatLng) markerPoints.get(i);
-            if(i==2)
-             //   waypoints = "waypoints=optimize:false|";
-                  waypoints = "waypoints=";
-            waypoints +=  point.latitude + "," + point.longitude + "|";
-        }
-
-        // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor+"&"+waypoints;
-
-        // Output format
-        String output = "json";
-
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
-
-        return url;
-    }
-
-    /** A method to download json data from url */
-    private String downloadUrl(String strUrl) throws IOException{
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try{
-            URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
-            urlConnection.connect();
-
-            // Reading data from url
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-            StringBuffer sb  = new StringBuffer();
-
-            String line = "";
-            while( ( line = br.readLine())  != null){
-                sb.append(line);
-            }
-
-            data = sb.toString();
-
-            br.close();
-
-        }catch(Exception e){
-            Log.d("Error downloading url", e.toString());
-        }finally{
-            iStream.close();
-            urlConnection.disconnect();
-        }
-        return data;
-    }
-
-    // Fetches data from url passed
-    private class DownloadTask extends AsyncTask<String, Void, String>{
-
-        // Downloading data in non-ui thread
-        @Override
-        protected String doInBackground(String... url) {
-
-            // For storing data from web service
-
-            String data = "";
-
-            try{
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
-            }
-            return data;
-        }
-
-        // Executes in UI thread, after the execution of
-        // doInBackground()
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-        }
-    }
-
-    /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
-
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
-
-            try{
-                jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
-
-                // Starts parsing data
-                routes = parser.parse(jObject);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            return routes;
-        }
-
-        // Executes in UI thread, after the parsing process
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-
-            ArrayList<LatLng> points = null;
-            PolylineOptions lineOptions = null;
-
-            // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
-
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
-
-                // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
-                    HashMap<String,String> point = path.get(j);
-
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-
-                    points.add(position);
-                }
-
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(6);
-
-                if(green){
-                    lineOptions.color(Color.GREEN);
-                }else {
-                    lineOptions.color(Color.BLUE);
-                }
-            }
-
-            // Drawing polyline in the Google Map for the i-th route
-            mMap.addPolyline(lineOptions);
-        }
     }
 }
