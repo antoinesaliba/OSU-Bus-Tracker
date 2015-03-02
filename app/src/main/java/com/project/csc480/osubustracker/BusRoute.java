@@ -51,6 +51,11 @@ public class BusRoute {
             busStops.add(new BusStop("LIBRARY", new LatLng(43.45426628708711, -76.54450535774231)));
             busStops.add(new BusStop("MARY_WALKER", new LatLng(43.455475, -76.542743)));
             busStops.add(new BusStop("SHINEMAN", new LatLng(43.454282, -76.539160)));
+        } else if(routeName.equals("greenRoute")) {
+            //GREEN ROUTE BUS STOPS
+            busStops.add(new BusStop("CAMPUS CENTER", new LatLng(43.453838, -76.540628)));
+            busStops.add(new BusStop("ROMNEY", new LatLng(43.447918, -76.534195)));
+            busStops.add(new BusStop("LAKER", new LatLng(43.446368, -76.53462409973145)));
         }
     }
 
