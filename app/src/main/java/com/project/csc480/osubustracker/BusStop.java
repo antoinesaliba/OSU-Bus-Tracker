@@ -9,8 +9,24 @@ public class BusStop {
     String name;
     LatLng coordinates;
 
-    public BusStop(String n, double lat, double lon){
-        name = n;
-        coordinates = new LatLng(lat, lon);
+    public BusStop(String n, LatLng coordinates){
+        this.name = n;
+        this.coordinates = coordinates;
+    }
+
+    public LatLng getCoordinates() {
+        return coordinates;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setCoordinates(LatLng coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

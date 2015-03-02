@@ -1,7 +1,6 @@
 package com.project.csc480.osubustracker;
 
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -11,7 +10,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -19,26 +17,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONObject;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+
 
 public class MainActivity extends FragmentActivity {
 
@@ -47,37 +39,7 @@ public class MainActivity extends FragmentActivity {
     boolean green; //used to tell the lineOptions to make the green route line green
 
     private final Handler handler = new Handler();
-
-    public BusRoute blue = new BusRoute("blueRoute");
-    
-
-    private static final LatLng CAMPUS_CENTER = new LatLng(43.453838, -76.540628);
-    private static final LatLng CIRCLE = new LatLng(43.453523, -76.541181);
-    //private static final LatLng CAMPUS_CENTER = new LatLng(43.453793, -76.540730); //43.453933, -76.540344   43.453838, -76.540628
-
-    //BLUE ROUTE HIGHLIGHTING
-    private static final LatLng ONONDAGA = new LatLng(43.450535, -76.549731);
-    private static final LatLng RIGGS_HALL = new LatLng(43.457295865792744, -76.53929114341736);
-    private static final LatLng VILLAGE = new LatLng(43.44699935247679, -76.54906511306763);
-    private static final LatLng PENFIELD_LIBRARY = new LatLng(43.454309, -76.543996);
-    private static final LatLng SHINEMAN = new LatLng(43.454282, -76.539160);
-
-    //BLUE ROUTE BUS STOPS
-    private static final LatLng MACKIN = new LatLng(43.454804, -76.53475284576416);
-    private static final LatLng JOHNSON = new LatLng(43.45713231914716, -76.53761744499207);
-    private static final LatLng LIBRARY = new LatLng(43.45426628708711, -76.54450535774231);
-    private static final LatLng MARY_WALKER = new LatLng(43.455475, -76.542743);
-
-
-    //GREEN ROUTE HIGHLIGHTING
-    private static final LatLng FIFTHAVE = new LatLng(43.45357312306545, -76.53239250183105);
-    private static final LatLng ROMNEY = new LatLng(43.447918, -76.534195);
-    private static final LatLng LAKER = new LatLng(43.446368, -76.53462409973145);
-
-
-    ArrayList<LatLng> list = new ArrayList<LatLng>(10);
     int c = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +48,18 @@ public class MainActivity extends FragmentActivity {
 
         markerPoints = new ArrayList<LatLng>();
         green = false;
+
+        //Creating the Blue Route object and loading the route points and the bus stops
+        final BusRoute blueRoute = new BusRoute("blueRoute");
+        blueRoute.loadRoute();
+        blueRoute.loadBusStops();
+        //Creating the Green Route object and loading the route points and the bus stops
+        final BusRoute greenRoute = new BusRoute("greenRoute");
+        greenRoute.loadRoute();
+        greenRoute.loadBusStops();
+
+        final Vehicle blueRouteVehicle = new Vehicle("blueRoute");
+        blueRouteVehicle.loadMapPosition(); //temporary
 
         setUpMapIfNeeded();
 
@@ -100,32 +74,22 @@ public class MainActivity extends FragmentActivity {
                 if (isChecked) {
                     mMap.clear();
                     green = true; //used to tell the lineOptions to make the green route line green
-                    enableGreenRoute(mMap);
+                    enableRoute(mMap, greenRoute);
 
                 } else {
                     mMap.clear();
                     green = false;
-                    enableBlueRoute(mMap);
+                    enableRoute(mMap, blueRoute);
                 }
             }
         });
 
         final Circle circle = mMap.addCircle(new CircleOptions()
-                .center(CAMPUS_CENTER)
+                .center(new LatLng(43.453838, -76.540628)) //CAMPUS CENTER
                 .radius(5)
                 .strokeColor(Color.RED)
                 .fillColor(Color.RED)
                 .zIndex(1));
-
-        list.add(CAMPUS_CENTER);
-        list.add(MACKIN);
-        list.add(JOHNSON);
-        list.add(LIBRARY);
-        list.add(ONONDAGA);
-        list.add(VILLAGE);
-        list.add(LIBRARY);
-        list.add(SHINEMAN);
-        list.add(CAMPUS_CENTER);
 
         Runnable m_handlerTask ;
         m_handlerTask = new Runnable()
@@ -133,7 +97,7 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void run() {
 
-                updateMarker(circle);
+                updateMarker(circle, blueRouteVehicle);
                 handler.postDelayed(this, 5000);
 
             }
@@ -143,9 +107,9 @@ public class MainActivity extends FragmentActivity {
         Log.i("MainActivity", "Setup passed...");
     }
 
-    public void updateMarker(Circle circle){
-        if(c!=list.size()) {
-            circle.setCenter(list.get(c));
+    public void updateMarker(Circle circle, Vehicle vehicle){
+        if(c!=vehicle.getMapPosition().size()) {
+            circle.setCenter(vehicle.getMapPosition().get(c));
             c++;
         }
     }
@@ -180,7 +144,11 @@ public class MainActivity extends FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap(mMap);
-                enableBlueRoute(mMap);
+                //Creating the Blue Route object and loading the route points and the bus stops
+                final BusRoute blueRoute = new BusRoute("blueRoute");
+                blueRoute.loadRoute();
+                blueRoute.loadBusStops();
+                enableRoute(mMap, blueRoute);
             }
         }
     }
@@ -197,76 +165,27 @@ public class MainActivity extends FragmentActivity {
 
 
         //map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(CAMPUS_CENTER, (float) 14.5));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
         map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-
-
     }
 
-    public void enableBlueRoute(GoogleMap map) {
+    public void enableRoute(GoogleMap map, BusRoute route) {
         // Already 10 locations with 8 waypoints and 1 start location and 1 end location.
         // Up to 8 waypoints are allowed in a query for non-business users
         if (markerPoints.size() >= 10) {
             return;
         }
+        for(int i=0; i < route.getRoutePoints().size(); i++) {
+            markerPoints.add(route.getRoutePoints().get(i));
+        }
 
-        // Adding new item to the ArrayList
-        //Origin:
-        markerPoints.add(CAMPUS_CENTER);
-
-        //Destination:
-        markerPoints.add(CAMPUS_CENTER);
-
-        //Waypoints:
-        markerPoints.add(CIRCLE);
-        markerPoints.add(RIGGS_HALL);
-        markerPoints.add(ONONDAGA);
-        markerPoints.add(VILLAGE);
-        markerPoints.add(PENFIELD_LIBRARY);
-        markerPoints.add(SHINEMAN);
-
-
-
-        // Creating MarkerOptions
-        MarkerOptions markerOrigin = new MarkerOptions();
-
-        MarkerOptions busStop1 = new MarkerOptions();
-        MarkerOptions busStop2 = new MarkerOptions();
-        MarkerOptions busStop3 = new MarkerOptions();
-        MarkerOptions busStop4 = new MarkerOptions();
-        MarkerOptions busStop5 = new MarkerOptions();
-        MarkerOptions busStop6 = new MarkerOptions();
-
-        // Setting the position of the marker
-
-        markerOrigin.position(CAMPUS_CENTER)  //Origin
-                .title("Origin")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
-        busStop1.position(MACKIN) //Destination
-                .title("Bus Stop: ")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
-        busStop2.position(JOHNSON) //Destination
-                .title("Bus Stop: ")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
-        busStop3.position(MARY_WALKER) //Destination
-                .title("Bus Stop: Mary Walker")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
-        busStop4.position(LIBRARY) //Destination
-                .title("Bus Stop: ")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
-        busStop5.position(ONONDAGA) //Destination
-                .title("Bus Stop: ")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
-        busStop6.position(VILLAGE) //Destination
-                .title("Bus Stop: ")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
+        for(int i = 0; i < route.getBusStops().size(); i++) {
+            // Add new marker to the Google Map Android API V2
+            map.addMarker(new MarkerOptions()
+                         .position(route.getBusStops().get(i).getCoordinates())
+                         .title(route.getBusStops().get(i).getName())
+                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon)));
+        }
 
         /**
          * For the start location, the color of marker is GREEN and
@@ -285,84 +204,6 @@ public class MainActivity extends FragmentActivity {
             // Start downloading json data from Google Directions API
             downloadTask.execute(url);
         }
-
-
-        // Add new marker to the Google Map Android API V2
-        map.addMarker(markerOrigin);
-        map.addMarker(busStop1);
-        map.addMarker(busStop2);
-        map.addMarker(busStop3);
-        map.addMarker(busStop4);
-        map.addMarker(busStop5);
-        map.addMarker(busStop6);
-    }
-
-    public void enableGreenRoute(GoogleMap map) {
-        // Already 10 locations with 8 waypoints and 1 start location and 1 end location.
-        // Up to 8 waypoints are allowed in a query for non-business users
-        if (markerPoints.size() >= 10) {
-            return;
-        }
-
-        // Adding new item to the ArrayList
-        //Origin:
-        markerPoints.add(CAMPUS_CENTER);
-
-        //Destination:
-        markerPoints.add(CAMPUS_CENTER);
-
-        //Waypoints:
-        markerPoints.add(FIFTHAVE);
-        markerPoints.add(ROMNEY);
-        markerPoints.add(LAKER);
-
-
-
-        // Creating MarkerOptions
-        MarkerOptions markerOrigin = new MarkerOptions();
-
-        MarkerOptions busStop1 = new MarkerOptions();
-        MarkerOptions busStop2 = new MarkerOptions();
-
-
-        // Setting the position of the marker
-
-        markerOrigin.position(CAMPUS_CENTER)  //Origin
-                .title("Origin")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
-        busStop1.position(ROMNEY) //Destination
-                .title("Bus Stop: ")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
-        busStop2.position(LAKER) //Destination
-                .title("Bus Stop: ")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon));
-
-
-        /**
-         * For the start location, the color of marker is GREEN and
-         * for the end location, the color of marker is RED and
-         * for the rest of markers, the color is AZURE
-         */
-        if (markerPoints.size() >= 2) {
-            LatLng origin = markerPoints.get(0);
-            LatLng dest = markerPoints.get(1);
-
-            // Getting URL to the Google Directions API
-            String url = getDirectionsUrl(origin, dest);
-
-            DownloadTask downloadTask = new DownloadTask();
-
-            // Start downloading json data from Google Directions API
-            downloadTask.execute(url);
-        }
-
-
-        // Add new marker to the Google Map Android API V2
-        map.addMarker(markerOrigin);
-        map.addMarker(busStop1);
-        map.addMarker(busStop2);
     }
 
     private String getDirectionsUrl(LatLng origin,LatLng dest){
