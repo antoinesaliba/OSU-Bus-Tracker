@@ -25,12 +25,12 @@ import java.util.List;
 /**
  * Created by antoinesaliba on 3/2/15.
  */
-public class RouteGenerator {
+public class RouteHighlighter {
     ArrayList<LatLng> markerPoints;
     boolean green; //used to tell the lineOptions to make the green route line green
     public GoogleMap map;
 
-    public RouteGenerator(GoogleMap m){
+    public RouteHighlighter(GoogleMap m){
         markerPoints = new ArrayList<LatLng>();
         green = false;
         map = m;

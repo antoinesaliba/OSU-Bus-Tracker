@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity {
 
     private final Handler handler = new Handler();
 
-    RouteGenerator highlighter;
+    RouteHighlighter highlighter;
 
     int c = 0;
 
@@ -51,11 +51,9 @@ public class MainActivity extends FragmentActivity {
         //Creating the Blue Route object and loading the route points and the bus stops
         final BusRoute blueRoute = new BusRoute("blueRoute");
         blueRoute.loadRoute();
-        blueRoute.loadBusStops();
         //Creating the Green Route object and loading the route points and the bus stops
         final BusRoute greenRoute = new BusRoute("greenRoute");
         greenRoute.loadRoute();
-        greenRoute.loadBusStops();
 
         final Vehicle blueRouteVehicle = new Vehicle("blueRoute");
         blueRouteVehicle.loadMapPosition(); //temporary
@@ -113,7 +111,7 @@ public class MainActivity extends FragmentActivity {
 
     public void changeRoute(GoogleMap m, BusRoute r, boolean g){
         mMap.clear();
-        highlighter = new RouteGenerator(m);
+        highlighter = new RouteHighlighter(m);
         highlighter.enableRoute(m, r, g);
     }
 
@@ -147,11 +145,10 @@ public class MainActivity extends FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap(mMap);
-                highlighter = new RouteGenerator(mMap);
+                highlighter = new RouteHighlighter(mMap);
                 //Creating the Blue Route object and loading the route points and the bus stops
                 final BusRoute blueRoute = new BusRoute("blueRoute");
                 blueRoute.loadRoute();
-                blueRoute.loadBusStops();
                 highlighter.enableRoute(mMap, blueRoute, false);
             }
         }

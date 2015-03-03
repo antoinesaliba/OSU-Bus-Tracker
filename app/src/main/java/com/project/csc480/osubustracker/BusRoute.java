@@ -41,6 +41,11 @@ public class BusRoute {
         this.routeName = routeName;
     }
 
+    public void loadRoute(){
+        loadBusStops();
+        loadRoutePoints();
+    }
+
     public void loadBusStops(){
 
         if(routeName.equals("blueRoute")) {
@@ -59,7 +64,7 @@ public class BusRoute {
         }
     }
 
-    public void loadRoute() {
+    public void loadRoutePoints() {
 
         if(routeName.equals("blueRoute")) {
                 //BLUE ROUTE HIGHLIGHTING
