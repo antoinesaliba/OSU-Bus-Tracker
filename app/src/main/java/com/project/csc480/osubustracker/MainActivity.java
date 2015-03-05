@@ -51,6 +51,7 @@ public class MainActivity extends FragmentActivity {
         //Creating the Blue Route object and loading the route points and the bus stops
         final BusRoute blueRoute = new BusRoute("blueRoute");
         blueRoute.loadRoute();
+
         //Creating the Green Route object and loading the route points and the bus stops
         final BusRoute greenRoute = new BusRoute("greenRoute");
         greenRoute.loadRoute();
@@ -93,23 +94,23 @@ public class MainActivity extends FragmentActivity {
         Log.i("MainActivity", "Setup passed...");
     }
 
-    public Circle createCircle(GoogleMap m){
+    public Circle createCircle(GoogleMap m){ //creates the bus indicator as a circle
         return mMap.addCircle(new CircleOptions()
                 .center(new LatLng(43.453838, -76.540628)) //CAMPUS CENTER
                 .radius(5)
                 .strokeColor(Color.RED)
                 .fillColor(Color.RED)
-                .zIndex(1));
+                .zIndex(1)); //whether it should be above or below everything else (map, other icons, etc)
     }
 
-    public void updateMarker(Circle circle, Vehicle vehicle){
+    public void updateMarker(Circle circle, Vehicle vehicle){ //updates the position of the bus marker until there are no more positions
         if(c!=vehicle.getMapPosition().size()) {
             circle.setCenter(vehicle.getMapPosition().get(c));
             c++;
         }
     }
 
-    public void changeRoute(GoogleMap m, BusRoute r, boolean g){
+    public void changeRoute(GoogleMap m, BusRoute r, boolean g){ //changes the current route being highlighted on the map
         mMap.clear();
         highlighter = new RouteHighlighter(m);
         highlighter.enableRoute(m, r, g);
@@ -144,12 +145,12 @@ public class MainActivity extends FragmentActivity {
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-                setUpMap(mMap);
+                setUpMap(mMap); //sets up the initial, basic map with nothing on it
                 highlighter = new RouteHighlighter(mMap);
                 //Creating the Blue Route object and loading the route points and the bus stops
                 final BusRoute blueRoute = new BusRoute("blueRoute");
                 blueRoute.loadRoute();
-                highlighter.enableRoute(mMap, blueRoute, false);
+                highlighter.enableRoute(mMap, blueRoute, false); //starts the application by showing the blue route highlighted
             }
         }
     }

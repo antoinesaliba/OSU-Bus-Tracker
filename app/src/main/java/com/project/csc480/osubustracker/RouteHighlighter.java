@@ -36,7 +36,7 @@ public class RouteHighlighter {
         map = m;
     }
 
-
+    //give it the app map, the route you want to highlight and a boolean for whether the highlight should be green or not(blue)
     public void enableRoute(GoogleMap m, BusRoute route, boolean g) {
         this.map = m;
         green = g;
