@@ -3,5 +3,7 @@
 
     <string name="app_name">OSU Bus Tracker</string>
     <string name="title_activity_main">OSU Bus Tracker</string>
+    <string name="action_search">Search</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
