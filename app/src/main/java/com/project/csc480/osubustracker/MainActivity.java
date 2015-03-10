@@ -1,5 +1,6 @@
 package com.project.csc480.osubustracker;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
