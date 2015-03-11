@@ -120,8 +120,8 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
 
-        /*******/
-        /*******/
+        /***********/
+        /**********/
         //Creating the Blue Route object and loading the route points and the bus stops
         final BusRoute blueRoute = new BusRoute("blueRoute");
         blueRoute.loadRoute();
