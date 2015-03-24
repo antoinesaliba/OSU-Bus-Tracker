@@ -5,7 +5,6 @@ package com.project.csc480.osubustracker;
  */
 
 import android.os.AsyncTask;
-import android.provider.DocumentsContract;
 import android.util.Log;
 
 import org.w3c.dom.*;
@@ -54,9 +53,9 @@ public class XMLParser extends AsyncTask<String, Void, String> {
                 lon = Double.parseDouble(eElement.getElementsByTagName("lon").item(0).getTextContent().trim());
             }
 
-            Log.i("USER INPUT", id+" ");
-            Log.i("USER INPUT", lat+" ");
-            Log.i("USER INPUT", lon+" ");
+            //Log.i("USER INPUT", id+" ");
+            //Log.i("USER INPUT", lat+" ");
+            //Log.i("USER INPUT", lon+" ");
 
         } catch (SAXException e) {
             e.printStackTrace();

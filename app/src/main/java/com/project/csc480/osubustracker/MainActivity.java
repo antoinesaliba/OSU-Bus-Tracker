@@ -30,7 +30,12 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 
 public class MainActivity extends FragmentActivity {
@@ -41,6 +46,7 @@ public class MainActivity extends FragmentActivity {
 
     RouteHighlighter highlighter;
 
+    XMLParser parser;
     int c = 0;
 
     /***** Navigation Drawer Attributes *****/
@@ -63,6 +69,17 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        try {
+            parser = new XMLParser();
+            parser.execute();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
 
 
         /*** DRAWER ****/
@@ -159,18 +176,6 @@ public class MainActivity extends FragmentActivity {
 
         final Circle circle = createCircle(mMap);
 
-        Runnable m_handlerTask ;
-        m_handlerTask = new Runnable()
-        {
-            @Override
-            public void run() {
-
-                updateMarker(circle, blueRouteVehicle);
-                handler.postDelayed(this, 5000);
-
-            }
-        };
-        m_handlerTask.run();
 
         Log.i("MainActivity", "Setup passed...");
     }
@@ -298,10 +303,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void updateMarker(Circle circle, Vehicle vehicle){ //updates the position of the bus marker until there are no more positions
-        if(c!=vehicle.getMapPosition().size()) {
-            circle.setCenter(vehicle.getMapPosition().get(c));
-            c++;
-        }
+            circle.setCenter(new LatLng(parser.lat, parser.lon));
+            Log.i("THISSSSSS", parser.lat+" "+parser.lon);
     }
 
     public void changeRoute(GoogleMap m, BusRoute r, boolean g){ //changes the current route being highlighted on the map
