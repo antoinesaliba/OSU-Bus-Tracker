@@ -5,7 +5,11 @@ package com.project.csc480.osubustracker;
  */
 
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
+
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -20,17 +24,25 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     DocumentBuilder dBuilder;
     Document doc;
     final String url = "http://moxie.cs.oswego.edu/~osubus/busResponseAPI.xml";
+    private final Handler handler = new Handler();
+    Circle circle;
     int id;
     double lat, lon;
 
 
-    public XMLParser() throws ParserConfigurationException, IOException, SAXException {
+    public XMLParser(Circle c) throws ParserConfigurationException, IOException, SAXException {
         dbFactory = DocumentBuilderFactory.newInstance();
         dBuilder = dbFactory.newDocumentBuilder();
+        circle = c;
         }
 
     @Override
     protected String doInBackground(String...urls) {
+        parse();
+        return "Executed";
+    }
+
+    private void parse(){
         try {
             doc = dBuilder.parse(new URL(url).openStream());
             doc.getDocumentElement().normalize();
@@ -62,6 +74,19 @@ public class XMLParser extends AsyncTask<String, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "Executed";
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        circle.setCenter(new LatLng(lat, lon));
+        try {
+            new XMLParser(circle).execute();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
     }
 }

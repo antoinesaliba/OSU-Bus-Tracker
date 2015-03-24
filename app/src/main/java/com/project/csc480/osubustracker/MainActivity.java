@@ -70,17 +70,6 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
-            parser = new XMLParser();
-            parser.execute();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-
 
         /*** DRAWER ****/
         mTitle = mDrawerTitle = getTitle();
@@ -175,6 +164,15 @@ public class MainActivity extends FragmentActivity {
         }
 
         final Circle circle = createCircle(mMap);
+        try {
+            new XMLParser(circle).execute();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
 
 
         Log.i("MainActivity", "Setup passed...");
