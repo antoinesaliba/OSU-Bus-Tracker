@@ -3,8 +3,10 @@ package com.project.csc480.osubustracker;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -198,6 +200,10 @@ public class MainActivity extends FragmentActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
+            case R.id.action_schedule:
+                Uri uriUrl = Uri.parse("http://www.centro.org/Schedules-Oswego.aspx");
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                startActivity(launchBrowser);
             default:
                 return super.onOptionsItemSelected(item);
         }
