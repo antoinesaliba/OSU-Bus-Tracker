@@ -199,6 +199,9 @@ public class MainActivity extends FragmentActivity {
         // Handle action bar actions click
         switch (item.getItemId()) {
             case R.id.action_settings:
+                //changes to settings page
+                Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(settingsIntent);
                 return true;
             case R.id.action_schedule:
                 Uri uriUrl = Uri.parse("http://www.centro.org/Schedules-Oswego.aspx");
@@ -216,7 +219,7 @@ public class MainActivity extends FragmentActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // if nav drawer is opened, hide the action items
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_overflow).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
