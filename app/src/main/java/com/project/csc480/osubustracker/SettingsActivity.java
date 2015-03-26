@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +19,9 @@ public class SettingsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -29,6 +34,10 @@ public class SettingsActivity extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar actions click
         switch (item.getItemId()) {
+            case android.R.id.home:
+                //First save the settings and so go back.
+                onBackPressed();
+                return true;
             case R.id.action_schedule:
                 Uri uriUrl = Uri.parse("http://www.centro.org/Schedules-Oswego.aspx");
                 Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);

@@ -52,7 +52,7 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
             Node nNode = nList.item(0);
 
-            Log.i("MESSAGE", "\nCurrent Element :" + nNode.getNodeName());
+            //Log.i("MESSAGE", "\nCurrent Element :" + nNode.getNodeName());
 
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 

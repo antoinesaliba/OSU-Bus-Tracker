@@ -73,6 +73,48 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
 
 
+        setUpDrawerNavigation();
+
+        /**********/
+        //Creating the Blue Route object and loading the route points and the bus stops
+        final BusRoute blueRoute = new BusRoute("blueRoute");
+        blueRoute.loadRoute();
+
+        //Creating the Green Route object and loading the route points and the bus stops
+        final BusRoute greenRoute = new BusRoute("greenRoute");
+        greenRoute.loadRoute();
+
+        final Vehicle blueRouteVehicle = new Vehicle("blueRoute");
+        blueRouteVehicle.loadMapPosition(); //temporary
+
+        setUpMapIfNeeded();
+
+        // Getting reference to SupportMapFragment of the activity_main
+        SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
+
+        if (savedInstanceState == null) {
+            // on first time display view for first nav item
+            displayView(0);
+        }
+
+        final Circle circle = createCircle(mMap);
+        try {
+            new XMLParser(circle).execute();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+
+
+        Log.i("MainActivity", "Setup passed...");
+    }
+
+    private void setUpDrawerNavigation() {
+
         /*** DRAWER ****/
         mTitle = mDrawerTitle = getTitle();
         // load slide menu items -> Bus Routes names
@@ -106,7 +148,6 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
-
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
@@ -127,57 +168,6 @@ public class MainActivity extends FragmentActivity {
 
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
-
-        /***********/
-        /**********/
-        //Creating the Blue Route object and loading the route points and the bus stops
-        final BusRoute blueRoute = new BusRoute("blueRoute");
-        blueRoute.loadRoute();
-
-        //Creating the Green Route object and loading the route points and the bus stops
-        final BusRoute greenRoute = new BusRoute("greenRoute");
-        greenRoute.loadRoute();
-
-        final Vehicle blueRouteVehicle = new Vehicle("blueRoute");
-        blueRouteVehicle.loadMapPosition(); //temporary
-
-        setUpMapIfNeeded();
-
-        // Getting reference to SupportMapFragment of the activity_main
-        SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
-        /*
-        Switch toggle = (Switch) findViewById(R.id.switch1);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    changeRoute(mMap, greenRoute, true);
-
-                } else {
-                    changeRoute(mMap, blueRoute, false);
-                }
-            }
-        });
-        */
-
-        if (savedInstanceState == null) {
-            // on first time display view for first nav item
-            displayView(0);
-        }
-
-        final Circle circle = createCircle(mMap);
-        try {
-            new XMLParser(circle).execute();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-
-
-        Log.i("MainActivity", "Setup passed...");
     }
 
     @Override
@@ -189,7 +179,6 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    /**** FOR DRAWER*****/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // toggle nav drawer on selecting action bar app icon/title
