@@ -10,9 +10,9 @@
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
-        <item >Blue Route</item>
-        <item >Green Route</item>
-        <item >1A - Walmart</item>
+        <item>Blue Route</item>
+        <item>Green Route</item>
+        <item>1A - Walmart</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -20,5 +20,9 @@
     <array name="nav_drawer_icons">
         <item>@drawable/ic_launcher</item>
     </array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_reconnect">ReconnectActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

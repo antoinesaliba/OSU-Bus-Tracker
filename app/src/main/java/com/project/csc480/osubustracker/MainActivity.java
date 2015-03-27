@@ -1,13 +1,19 @@
 package com.project.csc480.osubustracker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -30,7 +36,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.Switch;
 
 import org.xml.sax.SAXException;
 
@@ -47,6 +52,9 @@ public class MainActivity extends FragmentActivity {
     private final Handler handler = new Handler();
 
     RouteHighlighter highlighter;
+
+    AlertDialog aD = null;
+    boolean finish = false;
 
     XMLParser parser;
     int c = 0;
@@ -72,7 +80,37 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initialize();
+        // If there is no network connection, execute the following
+        if(!isConnected()) {
+            // Start the reconnect Activity
+            startActivity(new Intent(MainActivity.this, Reconnect.class));
+            finish();
+        // if there is a network connection, continue on
+        } else {
+            setUpMapIfNeeded();
+            // Getting reference to SupportMapFragment of the activity_main
+            SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            if (savedInstanceState == null) {
+                // on first time display view for first nav item
+                displayView(0);
+            }
+            final Circle circle = createCircle(mMap);
+            try {
+                new XMLParser(circle).execute();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            }
 
+            Log.i("MainActivity", "Setup passed...");
+        }
+    }
+
+    public void initialize() {
         setUpDrawerNavigation();
 
         /**********/
@@ -84,34 +122,36 @@ public class MainActivity extends FragmentActivity {
         final BusRoute greenRoute = new BusRoute("greenRoute");
         greenRoute.loadRoute();
 
+
         final Vehicle blueRouteVehicle = new Vehicle("blueRoute");
         blueRouteVehicle.loadMapPosition(); //temporary
-
-        setUpMapIfNeeded();
-
-        // Getting reference to SupportMapFragment of the activity_main
-        SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
-
-        if (savedInstanceState == null) {
-            // on first time display view for first nav item
-            displayView(0);
-        }
-
-        final Circle circle = createCircle(mMap);
-        try {
-            new XMLParser(circle).execute();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-
-
-        Log.i("MainActivity", "Setup passed...");
     }
+
+    //Christian's Code
+    public boolean isConnected() {
+        ConnectivityManager cM = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cM.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                cM.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * Creates an AlertDialog that tells the user to connect to the internet
+     */
+    /*public void displayReconnect() {
+        aD = new AlertDialog.Builder(this).create();
+        aD.setTitle("No Connection");
+        aD.setMessage("Please make sure you are connected to the internet before running Centroz.");
+        aD.show();
+        SystemClock.sleep(8000);
+        aD.dismiss();
+        finish();
+        System.exit(0);
+    }*/
+
 
     private void setUpDrawerNavigation() {
 
@@ -312,7 +352,11 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
+        //if(isConnected()) {
+            setUpMapIfNeeded();
+        /*} else {
+            displayReconnect();
+        }*/
     }
 
     /**
