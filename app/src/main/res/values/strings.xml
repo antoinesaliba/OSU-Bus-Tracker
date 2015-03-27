@@ -25,4 +25,6 @@
     <string name="title_activity_reconnect">ReconnectActivity</string>
     <string name="hello_world">Hello world!</string>
 
+    <string name="createNotification">Create Notification</string>
+
 </resources>

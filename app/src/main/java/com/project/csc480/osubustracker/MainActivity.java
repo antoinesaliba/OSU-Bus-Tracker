@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.Marker;
 
 import android.graphics.Color;
 import android.support.v4.widget.DrawerLayout;
@@ -98,6 +99,29 @@ public class MainActivity extends FragmentActivity {
             final Circle circle = createCircle(mMap);
             try {
                 new XMLParser(circle).execute();
+
+
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_DARK)
+                                .setTitle("Create Notification")
+                                .setMessage("Would like to get a notification when the bus is close to " + marker.getTitle() + "?")
+                                .setPositiveButton(R.string.createNotification, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // create notification...
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                });
+
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -130,9 +154,13 @@ public class MainActivity extends FragmentActivity {
     //Christian's Code
     public boolean isConnected() {
         ConnectivityManager cM = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cM.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                cM.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+        if(cM.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) != null &&
+                cM.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED) {
             return true;
+        }
+        else if (cM.getNetworkInfo(ConnectivityManager.TYPE_WIFI) != null &&
+                    cM.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                return true;
         } else {
             return false;
         }

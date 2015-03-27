@@ -50,17 +50,17 @@ public class BusRoute {
 
         if(routeName.equals("blueRoute")) {
             //BLUE ROUTE BUS STOPS
-            busStops.add(new BusStop("CAMPUS CENTER", new LatLng(43.453838, -76.540628)));
-            busStops.add(new BusStop("MACKIN", new LatLng(43.454804, -76.53475284576416)));
-            busStops.add(new BusStop("JOHNSON", new LatLng(43.45713231914716, -76.53761744499207)));
-            busStops.add(new BusStop("LIBRARY", new LatLng(43.45426628708711, -76.54450535774231)));
-            busStops.add(new BusStop("MARY_WALKER", new LatLng(43.455475, -76.542743)));
-            busStops.add(new BusStop("SHINEMAN", new LatLng(43.454282, -76.539160)));
+            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628)));
+            busStops.add(new BusStop("Mackin", new LatLng(43.454804, -76.53475284576416)));
+            busStops.add(new BusStop("Johnson", new LatLng(43.45713231914716, -76.53761744499207)));
+            busStops.add(new BusStop("Library", new LatLng(43.45426628708711, -76.54450535774231)));
+            busStops.add(new BusStop("Mary Walker", new LatLng(43.455475, -76.542743)));
+            busStops.add(new BusStop("Shineman", new LatLng(43.454282, -76.539160)));
         } else if(routeName.equals("greenRoute")) {
             //GREEN ROUTE BUS STOPS
-            busStops.add(new BusStop("CAMPUS CENTER", new LatLng(43.453838, -76.540628)));
-            busStops.add(new BusStop("ROMNEY", new LatLng(43.447918, -76.534195)));
-            busStops.add(new BusStop("LAKER", new LatLng(43.446368, -76.53462409973145)));
+            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628)));
+            busStops.add(new BusStop("Romney", new LatLng(43.447918, -76.534195)));
+            busStops.add(new BusStop("Laker", new LatLng(43.446368, -76.53462409973145)));
         }
     }
 
