@@ -55,7 +55,7 @@ public class RouteHighlighter {
             map.addMarker(new MarkerOptions()
                     .position(route.getBusStops().get(i).getCoordinates())
                     .title(route.getBusStops().get(i).getName())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon)))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon)))
                     .setSnippet("Click Here");
         }
 
