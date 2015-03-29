@@ -74,6 +74,9 @@ public class MainActivity extends FragmentActivity {
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
+    Circle circle;
+    boolean firstTime = true;
+
     /**********/
 
     @Override
@@ -96,11 +99,6 @@ public class MainActivity extends FragmentActivity {
                 // on first time display view for first nav item
                 displayView(0);
             }
-            final Circle circle = createCircle(mMap);
-            try {
-                new XMLParser(circle).execute();
-
-
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
@@ -122,13 +120,6 @@ public class MainActivity extends FragmentActivity {
                     }
                 });
 
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            }
 
             Log.i("MainActivity", "Setup passed...");
         }
@@ -337,6 +328,16 @@ public class MainActivity extends FragmentActivity {
         switch (position) {
             case 0:
                 changeRoute(mMap, blueRoute, false);
+                circle = createCircle(mMap);
+                try {
+                    new XMLParser(circle).execute();
+                } catch (ParserConfigurationException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 1:
                 changeRoute(mMap, greenRoute, true);
@@ -359,17 +360,13 @@ public class MainActivity extends FragmentActivity {
 
     public Circle createCircle(GoogleMap m){ //creates the bus indicator as a circle
         return mMap.addCircle(new CircleOptions()
-                .center(new LatLng(43.453838, -76.540628)) //CAMPUS CENTER
+                .center(new LatLng(0, 0)) //CAMPUS CENTER
                 .radius(5)
                 .strokeColor(Color.RED)
                 .fillColor(Color.RED)
                 .zIndex(1)); //whether it should be above or below everything else (map, other icons, etc)
     }
 
-    public void updateMarker(Circle circle, Vehicle vehicle){ //updates the position of the bus marker until there are no more positions
-            circle.setCenter(new LatLng(parser.lat, parser.lon));
-            Log.i("THISSSSSS", parser.lat+" "+parser.lon);
-    }
 
     public void changeRoute(GoogleMap m, BusRoute r, boolean g){ //changes the current route being highlighted on the map
         mMap.clear();
