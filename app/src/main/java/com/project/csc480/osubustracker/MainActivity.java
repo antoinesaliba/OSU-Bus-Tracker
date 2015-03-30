@@ -19,11 +19,13 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.graphics.Color;
 import android.support.v4.widget.DrawerLayout;
@@ -56,6 +58,7 @@ public class MainActivity extends FragmentActivity {
 
     AlertDialog aD = null;
     boolean finish = false;
+    Marker circle;
 
     XMLParser parser;
     int c = 0;
@@ -74,8 +77,6 @@ public class MainActivity extends FragmentActivity {
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
-    Circle circle;
-    boolean firstTime = true;
 
     /**********/
 
@@ -328,9 +329,12 @@ public class MainActivity extends FragmentActivity {
         switch (position) {
             case 0:
                 changeRoute(mMap, blueRoute, false);
-                circle = createCircle(mMap);
+                circle = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(0, 0))
+                        .title("Bus")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon)));
                 try {
-                    new XMLParser(circle).execute();
+                    new XMLParser(mMap, circle).execute();
                 } catch (ParserConfigurationException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
