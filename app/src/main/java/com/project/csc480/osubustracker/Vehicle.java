@@ -1,6 +1,7 @@
 package com.project.csc480.osubustracker;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 

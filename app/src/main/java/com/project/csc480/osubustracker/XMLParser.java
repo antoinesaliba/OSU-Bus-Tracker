@@ -8,8 +8,11 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -22,18 +25,20 @@ import javax.xml.parsers.*;
 public class XMLParser extends AsyncTask<String, Void, String> {
     DocumentBuilderFactory dbFactory;
     DocumentBuilder dBuilder;
+    GoogleMap map;
     Document doc;
     final String url = "http://moxie.cs.oswego.edu/~osubus/busResponseAPI.xml";
     private final Handler handler = new Handler();
-    Circle circle;
+    Marker circle;
     int id;
     double lat, lon;
 
 
-    public XMLParser(Circle c) throws ParserConfigurationException, IOException, SAXException {
+    public XMLParser(GoogleMap m, Marker c) throws ParserConfigurationException, IOException, SAXException {
         dbFactory = DocumentBuilderFactory.newInstance();
         dBuilder = dbFactory.newDocumentBuilder();
         circle = c;
+        map = m;
         }
 
     @Override
@@ -78,9 +83,9 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        circle.setCenter(new LatLng(lat, lon));
+        circle.setPosition(new LatLng(lat, lon));
         try {
-            new XMLParser(circle).execute();
+            new XMLParser(map, circle).execute();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
