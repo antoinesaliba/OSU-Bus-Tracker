@@ -2,6 +2,7 @@ package com.project.csc480.osubustracker;
 
 /**
  * Created by antoinesaliba on 3/23/15.
+ * Edited by Lucas Neubert on 3/30/15.
  */
 
 import android.os.AsyncTask;
@@ -9,10 +10,8 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -27,18 +26,22 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     DocumentBuilder dBuilder;
     GoogleMap map;
     Document doc;
-    final String url = "http://moxie.cs.oswego.edu/~osubus/busResponseAPI.xml";
+    final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/busResponseAPI.xml";
+    String url;
     private final Handler handler = new Handler();
-    Marker circle;
+    Marker vehicleMarker;
     int id;
     double lat, lon;
 
+    String vehicleName;
 
-    public XMLParser(GoogleMap m, Marker c) throws ParserConfigurationException, IOException, SAXException {
+
+    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName) throws ParserConfigurationException, IOException, SAXException {
         dbFactory = DocumentBuilderFactory.newInstance();
         dBuilder = dbFactory.newDocumentBuilder();
-        circle = c;
-        map = m;
+        this.vehicleMarker = vehicleMarker;
+        this.vehicleName = vehicleName;
+        map = mMap;
         }
 
     @Override
@@ -49,6 +52,13 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
     private void parse(){
         try {
+
+            if(vehicleName.equals("blueRoute")) {
+                url = urlBlueRoute;
+            }
+
+            Log.i("XMLParser", "Parsing " + vehicleName);
+
             doc = dBuilder.parse(new URL(url).openStream());
             doc.getDocumentElement().normalize();
 
@@ -70,6 +80,14 @@ public class XMLParser extends AsyncTask<String, Void, String> {
                 lon = Double.parseDouble(eElement.getElementsByTagName("lon").item(0).getTextContent().trim());
             }
 
+
+/*          try {
+                Thread.sleep(5000); // Wait 5 seconds
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+
+
             //Log.i("USER INPUT", id+" ");
             //Log.i("USER INPUT", lat+" ");
             //Log.i("USER INPUT", lon+" ");
@@ -83,9 +101,13 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        circle.setPosition(new LatLng(lat, lon));
+
+        vehicleMarker.setPosition(new LatLng(lat, lon));
+
+
+
         try {
-            new XMLParser(map, circle).execute();
+            new XMLParser(map, vehicleMarker, vehicleName).execute();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -56,7 +56,10 @@ public class BusRoute {
             busStops.add(new BusStop("Library", new LatLng(43.45426628708711, -76.54450535774231)));
             busStops.add(new BusStop("Mary Walker", new LatLng(43.455475, -76.542743)));
             busStops.add(new BusStop("Shineman", new LatLng(43.454282, -76.539160)));
-        } else if(routeName.equals("greenRoute")) {
+            busStops.add(new BusStop("Village", new LatLng(43.44699935247679, -76.54906511306763)));
+
+        }
+        else if(routeName.equals("greenRoute")) {
             //GREEN ROUTE BUS STOPS
             busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628)));
             busStops.add(new BusStop("Romney", new LatLng(43.447918, -76.534195)));
@@ -68,8 +71,8 @@ public class BusRoute {
 
         if(routeName.equals("blueRoute")) {
                 //BLUE ROUTE HIGHLIGHTING
-                routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER
-                routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER
+                routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER // Origin
+                routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER // Destination
                 routePoints.add(new LatLng(43.453523, -76.541181)); // CIRCLE
                 routePoints.add(new LatLng(43.457295865792744, -76.53929114341736)); // RIGGS_HALL
                 routePoints.add(new LatLng(43.450535, -76.549731)); // ONONDAGA
