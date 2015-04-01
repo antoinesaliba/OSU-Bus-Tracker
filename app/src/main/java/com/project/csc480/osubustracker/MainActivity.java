@@ -6,12 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -44,13 +42,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public class MainActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-
-    private final Handler handler = new Handler();
-
     RouteHighlighter highlighter;
-
-    Marker circle;
-
     NavDrawer drawer = new NavDrawer();
 
 
@@ -70,50 +62,13 @@ public class MainActivity extends FragmentActivity {
             setUpMapIfNeeded();
             // Getting reference to SupportMapFragment of the activity_main
             SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
-                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-                        new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_HOLO_DARK)
-                                .setTitle("Create Notification")
-                                .setMessage("Would like to get a notification when the bus is close to " + marker.getTitle() + "?")
-                                .setPositiveButton(R.string.createNotification, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // create notification...
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // do nothing
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
-                    }
-                });
+            NotificationManager notificationManager = new NotificationManager(mMap, MainActivity.this);
 
             if (savedInstanceState == null) {
                 // on first time display view for first nav item
                 displayView(0);
             }
-
             Log.i("MainActivity", "Setup passed...");
-        }
-    }
-
-
-    //Christian's Code
-    public boolean isConnected() {
-        ConnectivityManager cM = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(cM.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) != null &&
-                cM.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED) {
-            return true;
-        }
-        else if (cM.getNetworkInfo(ConnectivityManager.TYPE_WIFI) != null &&
-                    cM.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-                return true;
-        } else {
-            return false;
         }
     }
 
@@ -131,6 +86,14 @@ public class MainActivity extends FragmentActivity {
         System.exit(0);
     }*/
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     private void setUpDrawerNavigation() {
 
@@ -187,14 +150,6 @@ public class MainActivity extends FragmentActivity {
 
         drawer.mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_activity_actions, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -313,6 +268,21 @@ public class MainActivity extends FragmentActivity {
         mMap.clear();
         highlighter = new RouteHighlighter(m);
         highlighter.enableRoute(m, r, g);
+    }
+
+    //Christian's Code
+    public boolean isConnected() {
+        ConnectivityManager cM = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(cM.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) != null &&
+                cM.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED) {
+            return true;
+        }
+        else if (cM.getNetworkInfo(ConnectivityManager.TYPE_WIFI) != null &&
+                cM.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
