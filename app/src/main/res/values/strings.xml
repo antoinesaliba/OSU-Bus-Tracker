@@ -20,6 +20,28 @@
     <array name="nav_drawer_icons">
         <item>@drawable/ic_launcher</item>
     </array>
+    
+    <!-- Settings map style -->
+    <string-array name="s_map_style">
+        <item>Satellite View</item>
+        <item>Map View</item>
+    </string-array>
+    <string-array name="s_map_style_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- Settings Default Route -->
+    <string-array name="s_default_route">
+        <item>Blue Route</item>
+        <item>Green Route</item>
+        <item>1A - Walmart</item>
+    </string-array>
+    <string-array name="s_default_route_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_reconnect">ReconnectActivity</string>
