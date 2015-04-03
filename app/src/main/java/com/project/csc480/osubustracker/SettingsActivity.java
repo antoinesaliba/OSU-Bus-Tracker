@@ -3,9 +3,8 @@ package com.project.csc480.osubustracker;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,15 +12,17 @@ import android.view.MenuItem;
 /**
  * Created by Scott on 3/25/2015.
  */
-public class SettingsActivity extends FragmentActivity {
+public class SettingsActivity extends PreferenceActivity {
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -35,7 +36,6 @@ public class SettingsActivity extends FragmentActivity {
         // Handle action bar actions click
         switch (item.getItemId()) {
             case android.R.id.home:
-                //First save the settings and so go back.
                 onBackPressed();
                 return true;
             case R.id.action_schedule:
@@ -44,6 +44,16 @@ public class SettingsActivity extends FragmentActivity {
                 startActivity(launchBrowser);
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    //inner class needed because addPreferencesFromResource is deprecated in PreferenceActivity
+    public static class SettingsFragment extends PreferenceFragment{
+
+        public void onCreate(Bundle savedInstanceState){
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preference_settings);
         }
     }
 }
