@@ -1,15 +1,15 @@
-package com.project.csc480.osubustracker;
-
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
+
 
 
 public class MainActivity extends FragmentActivity {
@@ -164,7 +165,7 @@ public class MainActivity extends FragmentActivity {
             case R.id.action_settings:
                 //changes to settings page
                 Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(settingsIntent);
+                startActivityForResult(settingsIntent, 1);
                 return true;
             case R.id.action_schedule:
                 Uri uriUrl = Uri.parse("http://www.centro.org/Schedules-Oswego.aspx");
@@ -293,6 +294,36 @@ public class MainActivity extends FragmentActivity {
         /*} else {
             displayReconnect();
         }*/
+    }
+    
+    //return from settings page
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+
+            case 1:
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+                //this returns the number associated with the root, for example: 1 = blue route
+                String dRoute = settings.getString("droute", "1");
+
+                //this returns whether the user has specified repeating notifications
+                boolean rNote = settings.getBoolean("rnote", false);
+
+                //this returns the preferred map style
+                String mStyle = settings.getString("mstyle", "1");
+
+                //this specifies whether user wants to cleared all notifications
+                boolean cNote = settings.getBoolean("cnote", false);
+                //this then gets set back to false after the clearing has been dealt with
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean("cnote", false);
+                editor.commit();
+
+                break;
+
+        }
     }
 
     /**
