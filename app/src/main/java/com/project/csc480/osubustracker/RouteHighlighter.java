@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -33,12 +34,12 @@ public class RouteHighlighter {
     public RouteHighlighter(GoogleMap m){
         markerPoints = new ArrayList<LatLng>();
         green = false;
-        map = m;
+        this.map = m;
     }
 
     //give it the app map, the route you want to highlight and a boolean for whether the highlight should be green or not(blue)
-    public void enableRoute(GoogleMap m, BusRoute route, boolean g) {
-        this.map = m;
+    public void enableRoute(BusRoute route, boolean g) {
+
         green = g;
 
         // Already 10 locations with 8 waypoints and 1 start location and 1 end location.
@@ -242,8 +243,16 @@ public class RouteHighlighter {
                 }
             }
 
+
+            if(!green)
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5));
+            else
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.447918, -76.534195), (float) 14.5));
+
             // Drawing polyline in the Google Map for the i-th route
             map.addPolyline(lineOptions);
+
+
         }
     }
 }

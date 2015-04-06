@@ -6,20 +6,24 @@ package com.project.csc480.osubustracker;
  */
 
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.net.URL;
 
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class XMLParser extends AsyncTask<String, Void, String> {
     DocumentBuilderFactory dbFactory;
@@ -28,7 +32,7 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     Document doc;
     final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/busResponseAPI.xml";
     String url;
-    private final Handler handler = new Handler();
+   // private final Handler handler = new Handler();
     Marker vehicleMarker;
     int id;
     double lat, lon;
@@ -81,17 +85,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
             }
 
 
-/*          try {
-                Thread.sleep(5000); // Wait 5 seconds
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-
-
-            //Log.i("USER INPUT", id+" ");
-            //Log.i("USER INPUT", lat+" ");
-            //Log.i("USER INPUT", lon+" ");
-
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -105,15 +98,5 @@ public class XMLParser extends AsyncTask<String, Void, String> {
         vehicleMarker.setPosition(new LatLng(lat, lon));
 
 
-
-        try {
-            new XMLParser(map, vehicleMarker, vehicleName).execute();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
     }
 }

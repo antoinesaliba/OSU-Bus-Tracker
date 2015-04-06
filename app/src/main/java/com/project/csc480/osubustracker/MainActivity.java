@@ -1,7 +1,6 @@
-import android.app.AlertDialog;
-import android.app.Fragment;
+package com.project.csc480.osubustracker;
+
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -24,19 +23,9 @@ import android.widget.ListView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 
 
@@ -46,11 +35,27 @@ public class MainActivity extends FragmentActivity {
     RouteHighlighter highlighter;
     NavDrawer drawer = new NavDrawer();
 
+    //Creating the Blue Route object
+    BusRoute blueRoute = new BusRoute("blueRoute");
+
+    //Creating the Green Route object
+    BusRoute greenRoute = new BusRoute("greenRoute");
+
+    Vehicle blueRouteVehicle = new Vehicle("blueRoute");
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //Loading the route points and the bus stops
+        blueRoute.loadRoute();
+        //Loading the route points and the bus stops
+        greenRoute.loadRoute();
+
 
         setUpDrawerNavigation();
         // If there is no network connection, execute the following
@@ -65,27 +70,12 @@ public class MainActivity extends FragmentActivity {
             SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             NotificationManager notificationManager = new NotificationManager(mMap, MainActivity.this);
 
-            if (savedInstanceState == null) {
-                // on first time display view for first nav item
-                displayView(0);
-            }
+            setDefaultRoute();
+
             Log.i("MainActivity", "Setup passed...");
         }
     }
 
-    /*
-     * Creates an AlertDialog that tells the user to connect to the internet
-     */
-    /*public void displayReconnect() {
-        aD = new AlertDialog.Builder(this).create();
-        aD.setTitle("No Connection");
-        aD.setMessage("Please make sure you are connected to the internet before running Centroz.");
-        aD.show();
-        SystemClock.sleep(8000);
-        aD.dismiss();
-        finish();
-        System.exit(0);
-    }*/
 
 
     @Override
@@ -230,26 +220,17 @@ public class MainActivity extends FragmentActivity {
      * */
     private void displayView(int position) {
 
-        //Creating the Blue Route object and loading the route points and the bus stops
-        final BusRoute blueRoute = new BusRoute("blueRoute");
-        blueRoute.loadRoute();
-
-        //Creating the Green Route object and loading the route points and the bus stops
-        final BusRoute greenRoute = new BusRoute("greenRoute");
-        greenRoute.loadRoute();
-
-        final Vehicle blueRouteVehicle = new Vehicle("blueRoute");
 
 
-        // update the main content by replacing fragments
-        Fragment fragment = null;
+
         switch (position) {
             case 0:
-                changeRoute(mMap, blueRoute, false);
+                changeRoute(blueRoute, false);
                 blueRouteVehicle.loadMapPosition(mMap);
                 break;
             case 1:
-                changeRoute(mMap, greenRoute, true);
+                blueRouteVehicle.stopLoadingPosition();
+                changeRoute(greenRoute, true);
                 break;
             case 2:
                 break;
@@ -265,10 +246,10 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    public void changeRoute(GoogleMap m, BusRoute r, boolean g){ //changes the current route being highlighted on the map
+    public void changeRoute(BusRoute route, boolean g){ //changes the current route being highlighted on the map
         mMap.clear();
-        highlighter = new RouteHighlighter(m);
-        highlighter.enableRoute(m, r, g);
+        highlighter = new RouteHighlighter(mMap);
+        highlighter.enableRoute(route, g);
     }
 
     //Christian's Code
@@ -305,15 +286,13 @@ public class MainActivity extends FragmentActivity {
             case 1:
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-                //this returns the number associated with the root, for example: 1 = blue route
-                String dRoute = settings.getString("droute", "1");
+                setDefaultRoute();
+                setDefaultMapStyle();
 
                 //this returns whether the user has specified repeating notifications
                 boolean rNote = settings.getBoolean("rnote", false);
 
-                //this returns the preferred map style
-                String mStyle = settings.getString("mstyle", "1");
-
+                
                 //this specifies whether user wants to cleared all notifications
                 boolean cNote = settings.getBoolean("cnote", false);
                 //this then gets set back to false after the clearing has been dealt with
@@ -324,6 +303,35 @@ public class MainActivity extends FragmentActivity {
                 break;
 
         }
+    }
+
+    private void setDefaultRoute(){
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //this returns the number associated with the root, for example: 1 = blue route
+        String dRoute = settings.getString("droute", "1");
+        if(dRoute.equals("1")) {
+            displayView(0); // Blue Route
+
+        }
+            else if(dRoute.equals("2")) {
+            displayView(1); // Green Route
+
+        }
+
+    }
+
+    private void setDefaultMapStyle()
+    {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        //this returns the preferred map style
+        String mStyle = settings.getString("mstyle", "1");
+
+        if(mStyle.equals("1"))
+            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        else
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
     /**
@@ -350,28 +358,19 @@ public class MainActivity extends FragmentActivity {
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap(mMap); //sets up the initial, basic map with nothing on it
-                highlighter = new RouteHighlighter(mMap);
-                //Creating the Blue Route object and loading the route points and the bus stops
-                final BusRoute blueRoute = new BusRoute("blueRoute");
-                blueRoute.loadRoute();
-                highlighter.enableRoute(mMap, blueRoute, false); //starts the application by showing the blue route highlighted
             }
         }
     }
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
 
     //sets the location for the map as well as how far in to zoom (right now zoom set to 15)
     private void setUpMap(GoogleMap map) {
 
 
         //map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
-        map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
+
+        setDefaultMapStyle();
+
     }
 }
