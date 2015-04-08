@@ -5,8 +5,10 @@ package com.project.csc480.osubustracker;
  * Edited by Lucas Neubert on 3/30/15.
  */
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -20,6 +22,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,16 +39,21 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     Marker vehicleMarker;
     int id;
     double lat, lon;
+    LatLng position;
+    Context context;
 
     String vehicleName;
+    ArrayList<LatLng>notifications=new ArrayList<>();
 
 
-    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName) throws ParserConfigurationException, IOException, SAXException {
+    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName, LatLng position, ArrayList<LatLng> notifications, final Context t) throws ParserConfigurationException, IOException, SAXException {
         dbFactory = DocumentBuilderFactory.newInstance();
         dBuilder = dbFactory.newDocumentBuilder();
         this.vehicleMarker = vehicleMarker;
         this.vehicleName = vehicleName;
         map = mMap;
+        this.position = position;
+        this.notifications = notifications;
     }
 
     @Override
@@ -61,7 +69,7 @@ public class XMLParser extends AsyncTask<String, Void, String> {
                 url = urlBlueRoute;
             }
 
-            Log.i("XMLParser", "Parsing " + vehicleName);
+            //Log.i("XMLParser", "Parsing " + vehicleName);
 
             doc = dBuilder.parse(new URL(url).openStream());
             doc.getDocumentElement().normalize();
@@ -83,8 +91,11 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
                 lon = Double.parseDouble(eElement.getElementsByTagName("lon").item(0).getTextContent().trim());
 
-            }
+                LatLng current = new LatLng(lat, lon);
 
+                checkNotifications(current);
+
+            }
 
         } catch (SAXException e) {
             e.printStackTrace();
@@ -93,8 +104,22 @@ public class XMLParser extends AsyncTask<String, Void, String> {
         }
     }
 
+    private void checkNotifications(LatLng currentPosition){
+        if(notifications.isEmpty()){
+            return;
+        }else{
+            for(int i = 0; i< notifications.size(); i++){
+                if((currentPosition.latitude - 0.00004) < notifications.get(i).latitude &&  notifications.get(i).latitude < (currentPosition.latitude + 0.00004)){
+                    System.out.println("YOOOOOOOO");
+                }
+            }
+        }
+    }
+
     @Override
     protected void onPostExecute(String result) {
-       vehicleMarker.setPosition(new LatLng(lat, lon));
+        position = new LatLng(lat, lon);
+        vehicleMarker.setPosition(position);
+        System.out.println(vehicleMarker.getPosition());
     }
 }

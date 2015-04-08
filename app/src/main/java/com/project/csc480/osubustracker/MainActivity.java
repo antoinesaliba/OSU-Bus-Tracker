@@ -68,7 +68,7 @@ public class MainActivity extends FragmentActivity {
             setUpMapIfNeeded();
             // Getting reference to SupportMapFragment of the activity_main
             SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-            NotificationManager notificationManager = new NotificationManager(mMap, MainActivity.this);
+            NotificationManager notificationManager = new NotificationManager(mMap, MainActivity.this, blueRouteVehicle);
 
             setDefaultRoute();
 
@@ -226,7 +226,7 @@ public class MainActivity extends FragmentActivity {
         switch (position) {
             case 0:
                 changeRoute(blueRoute, false);
-                blueRouteVehicle.loadMapPosition(mMap);
+                blueRouteVehicle.loadMapPosition(mMap, MainActivity.this);
                 break;
             case 1:
                 blueRouteVehicle.stopLoadingPosition();

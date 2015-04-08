@@ -15,19 +15,16 @@ import com.google.android.gms.maps.model.Marker;
 public class NotificationManager {
     GoogleMap map;
 
-    public NotificationManager(GoogleMap m, final Context t){
+    public NotificationManager(GoogleMap m, final Context t, final Vehicle vehicle){
         m.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
-            public void onInfoWindowClick(Marker marker) {
+            public void onInfoWindowClick(final Marker marker) {
                 new AlertDialog.Builder(t, AlertDialog.THEME_HOLO_DARK)
                         .setTitle("Create Notification")
                         .setMessage("Would like to be notified when the bus is close to " + marker.getTitle() + "?")
                         .setPositiveButton(R.string.createNotification, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                CharSequence text = "Hello toast!";
-                                int duration = Toast.LENGTH_SHORT;
-                                Toast toast = Toast.makeText(t, text, duration);
-                                toast.show();
+                                vehicle.notifications.add(marker.getPosition());
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
