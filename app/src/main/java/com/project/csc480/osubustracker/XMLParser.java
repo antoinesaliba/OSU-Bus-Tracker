@@ -46,7 +46,7 @@ public class XMLParser extends AsyncTask<String, Void, String> {
         this.vehicleMarker = vehicleMarker;
         this.vehicleName = vehicleName;
         map = mMap;
-        }
+    }
 
     @Override
     protected String doInBackground(String...urls) {
@@ -82,6 +82,7 @@ public class XMLParser extends AsyncTask<String, Void, String> {
                 lat = Double.parseDouble(eElement.getElementsByTagName("lat").item(0).getTextContent().trim());
 
                 lon = Double.parseDouble(eElement.getElementsByTagName("lon").item(0).getTextContent().trim());
+
             }
 
 
@@ -94,9 +95,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-
-        vehicleMarker.setPosition(new LatLng(lat, lon));
-
-
+       vehicleMarker.setPosition(new LatLng(lat, lon));
     }
 }

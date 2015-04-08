@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
@@ -23,7 +24,10 @@ public class NotificationManager {
                         .setMessage("Would like to be notified when the bus is close to " + marker.getTitle() + "?")
                         .setPositiveButton(R.string.createNotification, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // create notification...
+                                CharSequence text = "Hello toast!";
+                                int duration = Toast.LENGTH_SHORT;
+                                Toast toast = Toast.makeText(t, text, duration);
+                                toast.show();
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

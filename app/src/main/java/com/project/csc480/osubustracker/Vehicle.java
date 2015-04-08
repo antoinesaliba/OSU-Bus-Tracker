@@ -1,6 +1,7 @@
 package com.project.csc480.osubustracker;
 
 import android.util.Log;
+import android.util.Xml;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -30,6 +31,8 @@ public class Vehicle {
     boolean keepDoing = true;
 
     threadBusPosition tBusPosition;
+
+    LatLng position;
 
     public Vehicle(String routeName) {
         this.vehicleName = routeName;
@@ -70,7 +73,7 @@ public class Vehicle {
 
     public class threadBusPosition extends Thread {
         private static final String TAG = "threadBusPosition";
-        private static final int DELAY = 5000; // 5 seconds
+        private static final int DELAY = 10000; // 10 seconds
 
         @Override
         public void run() {
@@ -79,7 +82,8 @@ public class Vehicle {
                 Log.i(TAG, "doing work in the bus position Thread");
 
                 try {
-                    new XMLParser(mapAux, vehicleMarkerAux, vehicleName).execute();
+                    XMLParser parser = new XMLParser(mapAux, vehicleMarkerAux, vehicleName);
+                    parser.execute();
                 } catch (ParserConfigurationException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
