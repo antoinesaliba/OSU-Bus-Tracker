@@ -12,10 +12,10 @@ import com.google.android.gms.maps.model.Marker;
 /**
  * Created by antoinesaliba on 4/1/15.
  */
-public class NotificationManager {
+public class NotificationMaker {
     GoogleMap map;
 
-    public NotificationManager(GoogleMap m, final Context t, final Vehicle vehicle){
+    public NotificationMaker(GoogleMap m, final Context t, final Vehicle vehicle){
         m.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(final Marker marker) {
@@ -37,4 +37,6 @@ public class NotificationManager {
             }
         });
     }
+
+
 }

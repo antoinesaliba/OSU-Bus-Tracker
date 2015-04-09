@@ -37,11 +37,12 @@ public class Vehicle {
     Marker vehicleMarkerAux;
 
     boolean keepDoing = true;
-    Context context;
 
     threadBusPosition tBusPosition;
     LatLng position;
     ArrayList<LatLng>notifications=new ArrayList<>();
+    NotificationMaker manager;
+    Context context;
 
 
 
@@ -58,9 +59,10 @@ public class Vehicle {
     }
 
 
-    public void loadMapPosition(GoogleMap mMap, final Context t) {
-        context = t;
+    public void loadMapPosition(GoogleMap mMap, Context t) {
         Marker vehicleMarker;
+        context = t;
+        //manager = m;
 
         vehicleMarker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
@@ -74,7 +76,6 @@ public class Vehicle {
         this.tBusPosition = new threadBusPosition();
         this.keepDoing = true;
         this.tBusPosition.start();
-        System.out.println("this is really cool "+vehicleMarkerAux.getPosition());
 
 
     }
@@ -91,18 +92,9 @@ public class Vehicle {
         public void run() {
 
             while (keepDoing) {
-                try {
                     new XMLParser(mapAux, vehicleMarkerAux, vehicleName, position, notifications, context).execute();
-                } catch (ParserConfigurationException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                }
 
                 //When XMLParser returns lat and long, update the marker here.
-
                 try {
                     Thread.sleep(DELAY);
                 } catch (InterruptedException e) {

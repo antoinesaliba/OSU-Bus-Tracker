@@ -6,9 +6,10 @@ package com.project.csc480.osubustracker;
  */
 
 import android.content.Context;
+
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
+import android.support.v4.app.NotificationCompat;
+
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -27,8 +28,10 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import android.app.NotificationManager;
 
 public class XMLParser extends AsyncTask<String, Void, String> {
+    NotificationManager NM;
     DocumentBuilderFactory dbFactory;
     DocumentBuilder dBuilder;
     GoogleMap map;
@@ -40,20 +43,27 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     int id;
     double lat, lon;
     LatLng position;
-    Context context;
 
     String vehicleName;
     ArrayList<LatLng>notifications=new ArrayList<>();
+    NotificationManager manager;
+    Context context;
+    public static final int NOTIFICATION_ID = 1; //this can be any int
 
 
-    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName, LatLng position, ArrayList<LatLng> notifications, final Context t) throws ParserConfigurationException, IOException, SAXException {
-        dbFactory = DocumentBuilderFactory.newInstance();
-        dBuilder = dbFactory.newDocumentBuilder();
-        this.vehicleMarker = vehicleMarker;
-        this.vehicleName = vehicleName;
-        map = mMap;
-        this.position = position;
-        this.notifications = notifications;
+    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName, LatLng position, ArrayList<LatLng> notifications, Context t) {
+        try {
+            dbFactory = DocumentBuilderFactory.newInstance();
+            dBuilder = dbFactory.newDocumentBuilder();
+            this.vehicleMarker = vehicleMarker;
+            this.vehicleName = vehicleName;
+            map = mMap;
+            context = t;
+            this.position = position;
+            this.notifications = notifications;
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -93,8 +103,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
                 LatLng current = new LatLng(lat, lon);
 
-                checkNotifications(current);
-
             }
 
         } catch (SAXException e) {
@@ -110,16 +118,29 @@ public class XMLParser extends AsyncTask<String, Void, String> {
         }else{
             for(int i = 0; i< notifications.size(); i++){
                 if((currentPosition.latitude - 0.00004) < notifications.get(i).latitude &&  notifications.get(i).latitude < (currentPosition.latitude + 0.00004)){
-                    System.out.println("YOOOOOOOO");
+                    launchNotification();
+                    notifications.remove(i);
                 }
             }
         }
+    }
+
+    private void launchNotification(){
+        //Building the Notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setSmallIcon(R.drawable.busicon);
+        builder.setContentTitle("CentrOz");
+        builder.setContentText("Bus Almost Here!");
+
+        manager = (android.app.NotificationManager) context.getSystemService(
+                context.NOTIFICATION_SERVICE);
+        manager.notify(NOTIFICATION_ID, builder.build());
     }
 
     @Override
     protected void onPostExecute(String result) {
         position = new LatLng(lat, lon);
         vehicleMarker.setPosition(position);
-        System.out.println(vehicleMarker.getPosition());
+        checkNotifications(position);
     }
 }

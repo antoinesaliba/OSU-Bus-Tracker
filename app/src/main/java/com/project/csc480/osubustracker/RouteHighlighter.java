@@ -8,6 +8,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -53,10 +54,10 @@ public class RouteHighlighter {
 
         for(int i = 0; i < route.getBusStops().size(); i++) {
             // Add new marker to the Google Map Android API V2
-            map.addMarker(new MarkerOptions()
+                map.addMarker(new MarkerOptions()
                     .position(route.getBusStops().get(i).getCoordinates())
                     .title(route.getBusStops().get(i).getName())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon)))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon)))
                     .setSnippet("Click Here");
         }
 

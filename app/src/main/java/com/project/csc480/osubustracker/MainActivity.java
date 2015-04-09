@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.app.NotificationManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,7 +45,6 @@ public class MainActivity extends FragmentActivity {
     Vehicle blueRouteVehicle = new Vehicle("blueRoute");
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +68,9 @@ public class MainActivity extends FragmentActivity {
             setUpMapIfNeeded();
             // Getting reference to SupportMapFragment of the activity_main
             SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-            NotificationManager notificationManager = new NotificationManager(mMap, MainActivity.this, blueRouteVehicle);
+            NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRouteVehicle);
+
+
 
             setDefaultRoute();
 
