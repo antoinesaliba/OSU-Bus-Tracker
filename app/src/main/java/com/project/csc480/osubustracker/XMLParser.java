@@ -31,27 +31,29 @@ import javax.xml.parsers.ParserConfigurationException;
 import android.app.NotificationManager;
 
 public class XMLParser extends AsyncTask<String, Void, String> {
-    NotificationManager NM;
-    DocumentBuilderFactory dbFactory;
-    DocumentBuilder dBuilder;
+
+    public static final int NOTIFICATION_ID = 1; //this can be any int
+    final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/busResponseAPI.xml";
+
     GoogleMap map;
     Document doc;
-    final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/busResponseAPI.xml";
     String url;
-   // private final Handler handler = new Handler();
     Marker vehicleMarker;
+
+    //XML Data
     int id;
     double lat, lon;
     LatLng position;
 
     String vehicleName;
-    ArrayList<LatLng>notifications=new ArrayList<>();
+    ArrayList<LatLng>notifications; //stored coordinates where the user wants a notification
     NotificationManager manager;
     Context context;
-    public static final int NOTIFICATION_ID = 1; //this can be any int
 
+    DocumentBuilderFactory dbFactory;
+    DocumentBuilder dBuilder;
 
-    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName, LatLng position, ArrayList<LatLng> notifications, Context t) {
+    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName, ArrayList<LatLng> notifications, Context t) {
         try {
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
@@ -59,7 +61,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
             this.vehicleName = vehicleName;
             map = mMap;
             context = t;
-            this.position = position;
             this.notifications = notifications;
         } catch (ParserConfigurationException e) {
             e.printStackTrace();

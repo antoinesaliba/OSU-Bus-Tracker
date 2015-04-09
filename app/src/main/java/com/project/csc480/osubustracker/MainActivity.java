@@ -1,5 +1,6 @@
 package com.project.csc480.osubustracker;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.app.NotificationManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -68,11 +68,9 @@ public class MainActivity extends FragmentActivity {
             setUpMapIfNeeded();
             // Getting reference to SupportMapFragment of the activity_main
             SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
+            setDefaultRoute(); //based on settings, displays the prefered route and its vehicle icon
             NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRouteVehicle);
-
-
-
-            setDefaultRoute();
 
             Log.i("MainActivity", "Setup passed...");
         }
@@ -221,9 +219,6 @@ public class MainActivity extends FragmentActivity {
      * Diplaying fragment view for selected nav drawer list item
      * */
     private void displayView(int position) {
-
-
-
 
         switch (position) {
             case 0:

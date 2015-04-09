@@ -39,9 +39,7 @@ public class Vehicle {
     boolean keepDoing = true;
 
     threadBusPosition tBusPosition;
-    LatLng position;
     ArrayList<LatLng>notifications=new ArrayList<>();
-    NotificationMaker manager;
     Context context;
 
 
@@ -92,7 +90,8 @@ public class Vehicle {
         public void run() {
 
             while (keepDoing) {
-                    new XMLParser(mapAux, vehicleMarkerAux, vehicleName, position, notifications, context).execute();
+                    //sends the map, the vehicle marker, vehicle name, list of user desired notificaions and main activity context
+                    new XMLParser(mapAux, vehicleMarkerAux, vehicleName, notifications, context).execute();
 
                 //When XMLParser returns lat and long, update the marker here.
                 try {
