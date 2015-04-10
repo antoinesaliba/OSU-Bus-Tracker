@@ -30,7 +30,6 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
     String vehicleName, markerTitle;
     Context context;
     android.app.NotificationManager manager;
-    public static final int NOTIFICATION_ID = 1; //this can be any int
     Integer notificationId;
 
     public NotificationParser(String vehicleName, Double alertLat, Double alertLon, Context context
