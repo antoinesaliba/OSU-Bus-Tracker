@@ -71,6 +71,8 @@ public class MainActivity extends FragmentActivity {
 
             setDefaultRoute(); //based on settings, displays the prefered route and its vehicle icon
             NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRouteVehicle);
+            //Notification Maker using the AlertManager (to be tested)
+            //NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRouteVehicle, blueRoute);
 
             Log.i("MainActivity", "Setup passed...");
         }
