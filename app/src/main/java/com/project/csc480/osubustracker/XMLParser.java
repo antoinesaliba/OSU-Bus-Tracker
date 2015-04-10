@@ -118,7 +118,8 @@ public class XMLParser extends AsyncTask<String, Void, String> {
             return;
         }else{
             for(int i = 0; i< notifications.size(); i++){
-                if((currentPosition.latitude - 0.00004) < notifications.get(i).latitude &&  notifications.get(i).latitude < (currentPosition.latitude + 0.00004)){
+                System.out.println(notifications.size());
+                if(((currentPosition.latitude - 0.00004) < notifications.get(i).latitude &&  notifications.get(i).latitude < (currentPosition.latitude + 0.00004))||((currentPosition.longitude - 0.00004) < notifications.get(i).longitude &&  notifications.get(i).longitude < (currentPosition.longitude + 0.00004))){
                     launchNotification();
                     notifications.remove(i);
                 }
