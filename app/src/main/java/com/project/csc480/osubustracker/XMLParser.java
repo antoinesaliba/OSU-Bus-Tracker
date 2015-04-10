@@ -129,7 +129,7 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     private void launchNotification(){
         //Building the Notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.drawable.busicon);
+        builder.setSmallIcon(R.drawable.notificationicon);
         builder.setContentTitle("CentrOz");
         builder.setContentText("Bus Almost Here!");
 
