@@ -26,7 +26,6 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
     int id;
     double lat, lon;
     double alertLat, alertLon;
-    boolean keepDoing;
     String vehicleName, markerTitle;
     Context context;
     android.app.NotificationManager manager;
