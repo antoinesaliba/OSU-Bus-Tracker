@@ -1,6 +1,6 @@
 package com.project.csc480.osubustracker;
 
-import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,12 +29,12 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 
-
 public class MainActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     RouteHighlighter highlighter;
     NavDrawer drawer = new NavDrawer();
+    public static NotificationDataSource datasource;
 
     //Creating the Blue Route object
     BusRoute blueRoute = new BusRoute("blueRoute");
@@ -55,9 +55,11 @@ public class MainActivity extends FragmentActivity {
         blueRoute.loadRoute();
         //Loading the route points and the bus stops
         greenRoute.loadRoute();
-
-
+        datasource = new NotificationDataSource(this);
+        datasource.open();
         setUpDrawerNavigation();
+        checkNotification();
+
         // If there is no network connection, execute the following
         if(!isConnected()) {
             // Start the reconnect Activity
@@ -70,15 +72,12 @@ public class MainActivity extends FragmentActivity {
             SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
             setDefaultRoute(); //based on settings, displays the prefered route and its vehicle icon
-            NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRouteVehicle);
-            //Notification Maker using the AlertManager (to be tested)
-            //NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRouteVehicle, blueRoute);
+            //Notification Maker using the AlertManager
+            NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRouteVehicle, blueRoute);
 
             Log.i("MainActivity", "Setup passed...");
         }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,6 +85,21 @@ public class MainActivity extends FragmentActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_actions, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void checkNotification() {
+        for(int i = 0; i < datasource.getAllNotifications().size(); i++) {
+            Integer notificationId = datasource.getAllNotifications().get(i).getNotificationId();
+            boolean notificationExists = (PendingIntent.getBroadcast(this
+                                                                   , notificationId
+                                                                   , new Intent(this, AlarmReceiver.class)
+                                                                   , PendingIntent.FLAG_NO_CREATE) != null);
+            if (!notificationExists)
+            {
+                datasource.deleteNotification(notificationId);
+                Log.d("myTag", "DB: Lost notification deleted " + notificationId);
+            }
+        }
     }
 
     private void setUpDrawerNavigation() {
@@ -270,12 +284,29 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         //if(isConnected()) {
+        datasource.open();
+        checkNotification();
         setUpMapIfNeeded();
         /*} else {
             displayReconnect();
         }*/
     }
-    
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        datasource.open();
+        checkNotification();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        datasource.open();
+        checkNotification();
+    }
+
     //return from settings page
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -290,10 +321,8 @@ public class MainActivity extends FragmentActivity {
 
                 //this returns whether the user has specified repeating notifications
                 boolean rNote = settings.getBoolean("rnote", false);
-
-                
                 //this specifies whether user wants to cleared all notifications
-                boolean cNote = settings.getBoolean("cnote", false);
+                clearNotifications();
                 //this then gets set back to false after the clearing has been dealt with
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("cnote", false);
@@ -331,6 +360,16 @@ public class MainActivity extends FragmentActivity {
             mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         else
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+    }
+
+    public void clearNotifications() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean clearAll = settings.getBoolean("cnote", false);
+        if(clearAll) {
+            for(int i = 0; i < datasource.getAllNotifications().size(); i++) {
+                datasource.deleteNotification(datasource.getAllNotifications().get(i).getNotificationId());
+            }
+        }
     }
 
     /**

@@ -48,5 +48,6 @@
     <string name="hello_world">Hello world!</string>
 
     <string name="createNotification">Create Notification</string>
+    <string name="deleteNotification">Delete Notification</string>
 
 </resources>

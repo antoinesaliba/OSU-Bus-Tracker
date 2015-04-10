@@ -75,6 +75,13 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), notificationId, alarmIntent, 0);
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
                     alarmManager.cancel(pendingIntent);
+                    System.out.println("Notification deleted with id: " + notificationId);
+                    try {
+                        MainActivity.datasource.deleteNotification(notificationId);
+                    } catch (NullPointerException e){
+                        Log.i("deleteNotificationError", "App Closed: Unable to delete notification from the DB: " + notificationId + " " + markerTitle);
+                    }
+
                 }
             }
 
