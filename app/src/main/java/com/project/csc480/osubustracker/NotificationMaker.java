@@ -76,6 +76,7 @@ public class NotificationMaker {
                                     PendingIntent pendingIntent = PendingIntent.getBroadcast(t.getApplicationContext(), notificationId, alarmIntent, 0);
                                     AlarmManager alarmManager = (AlarmManager) t.getSystemService(t.ALARM_SERVICE);
                                     alarmManager.cancel(pendingIntent);
+                                    Toast.makeText(t, "Notification Deleted!", Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
