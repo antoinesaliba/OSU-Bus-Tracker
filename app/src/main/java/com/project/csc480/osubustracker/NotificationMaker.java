@@ -27,6 +27,8 @@ public class NotificationMaker {
             @Override
             public void onInfoWindowClick(final Marker marker) {
                 boolean notificationExists = checkIfNotificationExists(marker.getTitle());
+
+                // check if a notification already exists for that particular bus stop
                 if (!notificationExists) {
                     new AlertDialog.Builder(t, AlertDialog.THEME_HOLO_DARK)
                             .setTitle("Create Notification")
@@ -38,21 +40,27 @@ public class NotificationMaker {
                                     //Notification Maker using the AlertManager (to be tested)
                                     if (!marker.getTitle().equals("Bus")) {
                                         Toast.makeText(t, "Notification Created!", Toast.LENGTH_SHORT).show();
+
+                                        // each bus stop has a particular alertPosition
+                                        LatLng alertPosition = route.getBusStops().get(route.getBusStopIndex(marker.getTitle())).getAlertPosition();
+                                        Double lat = alertPosition.latitude;
+                                        Double lon = alertPosition.longitude;
+                                        // each bus stop has a unique notificationId to keep track of the notifications
+                                        Integer notificationId = route.getBusStops().get(route.getBusStopIndex(marker.getTitle())).getNotificationId();
+
                                         Intent alarmIntent = new Intent(t, AlarmReceiver.class);
                                         alarmIntent.putExtra("vehicleName", vehicle.getVehicleName());
                                         alarmIntent.putExtra("markerTitle", marker.getTitle());
-                                        LatLng alertPosition = route.getBusStops().get(route.getBusStopIndex(marker.getTitle())).getAlertPosition();
-                                        Integer notificationId = route.getBusStops().get(route.getBusStopIndex(marker.getTitle())).getNotificationId();
-                                        Double lat = alertPosition.latitude;
-                                        Double lon = alertPosition.longitude;
                                         alarmIntent.putExtra("lat", lat);
                                         alarmIntent.putExtra("lon", lon);
                                         alarmIntent.putExtra("notificationId", notificationId);
 
+                                        //creates the notification record on the database
                                         MainActivity.datasource.createNotification(marker.getTitle(), route.getRouteName(), notificationId);
+                                        //creates the notification thread each interval seconds to check the bus position
+                                        int interval = 5000;
                                         pendingIntent = PendingIntent.getBroadcast(t, notificationId, alarmIntent, 0);
                                         manager = (AlarmManager) t.getSystemService(t.ALARM_SERVICE);
-                                        int interval = 5000;
                                         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
                                     }
                                 }
@@ -70,13 +78,19 @@ public class NotificationMaker {
                             .setMessage("A notification for this bus stop already exists. Would you like to delete it?")
                             .setPositiveButton(R.string.deleteNotification, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(t, "Notification Deleted!", Toast.LENGTH_SHORT).show();
+
+                                    // each bus stop has a unique notificationId to keep track of the notifications
                                     Integer notificationId = route.getBusStops().get(route.getBusStopIndex(marker.getTitle())).getNotificationId();
+
+                                    // deletes the notification record from the database
                                     MainActivity.datasource.deleteNotification(notificationId);
+
+                                    // stops the notification thread that was checking the bus position
                                     Intent alarmIntent = new Intent(t, AlarmReceiver.class);
                                     PendingIntent pendingIntent = PendingIntent.getBroadcast(t.getApplicationContext(), notificationId, alarmIntent, 0);
                                     AlarmManager alarmManager = (AlarmManager) t.getSystemService(t.ALARM_SERVICE);
                                     alarmManager.cancel(pendingIntent);
-                                    Toast.makeText(t, "Notification Deleted!", Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -90,6 +104,7 @@ public class NotificationMaker {
             }
         });
     }
+
     public boolean checkIfNotificationExists(String busStopName) {
 
         List<com.project.csc480.osubustracker.Notification> notifications = MainActivity.datasource.getAllNotifications();

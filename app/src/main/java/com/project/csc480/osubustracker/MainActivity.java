@@ -89,6 +89,12 @@ public class MainActivity extends FragmentActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    // This method checks if there is any notification on the database
+    // that does not have a correspondent notification thread running.
+    // If the correspondent notification thread is not found,
+    // it means that the app was not able to delete the notification record
+    // from the database because the app was closed.
+    // This method will clean these 'lost' notifications.
     public void checkNotification() {
         for(int i = 0; i < datasource.getAllNotifications().size(); i++) {
             Integer notificationId = datasource.getAllNotifications().get(i).getNotificationId();

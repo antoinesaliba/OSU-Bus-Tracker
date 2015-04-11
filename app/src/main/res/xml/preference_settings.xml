@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
         android:key="droute"
-        android:title="Deafult Route"
+        android:title="Default Route"
         android:entries="@array/s_default_route"
         android:entryValues="@array/s_default_route_values"
         android:summary="%s"

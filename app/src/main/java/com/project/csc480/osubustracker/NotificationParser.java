@@ -77,6 +77,13 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
                     alarmManager.cancel(pendingIntent);
                     System.out.println("Notification deleted with id: " + notificationId);
                     try {
+                        // try to delete the notification record from the database.
+                        // If the app is closed, it wont be able to open the database
+                        // causing a NullPointerException.
+                        // In this case, the app has a method checkNotification()
+                        // on the MainActivity that whenever the user opens the app
+                        // it checks if there is any notification record
+                        // that was not deleted from the database
                         MainActivity.datasource.deleteNotification(notificationId);
                     } catch (NullPointerException e){
                         Log.i("deleteNotificationError", "App Closed: Unable to delete notification from the DB: " + notificationId + " " + markerTitle);

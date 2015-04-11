@@ -24,6 +24,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         Double lat = intent.getDoubleExtra("lat", 0);
         Double lon = intent.getDoubleExtra("lon", 0);
         Integer notificationId = intent.getIntExtra("notificationId", 0);
+
+        // every time the AlarmReceiver is called (based on the interval defined on the NotificationMaker class)
+        // it will create a notification thread to check if the bus is close the to bus stop alert position
         Thread notificationThread = new threadNotification(vehicleName, lat, lon, context, markerTitle, notificationId);
         notificationThread.run();
     }
