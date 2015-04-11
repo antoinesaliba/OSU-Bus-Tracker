@@ -1,5 +1,6 @@
 package com.project.csc480.osubustracker;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -365,11 +367,19 @@ public class MainActivity extends FragmentActivity {
     public void clearNotifications() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         boolean clearAll = settings.getBoolean("cnote", false);
+        Integer tableSize = datasource.getAllNotifications().size();
+        Integer count = datasource.getAllNotifications().size();
         if(clearAll) {
-            for(int i = 0; i < datasource.getAllNotifications().size(); i++) {
-                datasource.deleteNotification(datasource.getAllNotifications().get(i).getNotificationId());
+            while (tableSize != 0) {
+                Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), datasource.getAllNotifications().get(0).getNotificationId(), alarmIntent, 0);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.cancel(pendingIntent);
+                datasource.deleteNotification(datasource.getAllNotifications().get(0).getNotificationId());
+                tableSize = datasource.getAllNotifications().size();
             }
         }
+        Toast.makeText(this, count + " notification(s) deleted successfully.", Toast.LENGTH_SHORT).show();
     }
 
     /**

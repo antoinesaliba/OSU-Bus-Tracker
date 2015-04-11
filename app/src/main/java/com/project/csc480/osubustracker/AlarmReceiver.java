@@ -16,9 +16,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private static final int DELAY = 10000; // 10 seconds
-    private static final String TAG = "threadNotification";
-
     @Override
     public void onReceive(Context context, Intent intent)
     {
