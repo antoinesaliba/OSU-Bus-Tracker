@@ -247,7 +247,7 @@ public class MainActivity extends FragmentActivity {
         switch (position) {
             case 0:
                 changeRoute(blueRoute, false);
-                blueRouteVehicle.loadMapPosition(mMap, MainActivity.this);
+                blueRouteVehicle.loadMapPosition(mMap);
                 break;
             case 1:
                 blueRouteVehicle.stopLoadingPosition();

@@ -35,7 +35,6 @@ public class NotificationMaker {
                             .setMessage("Would like to be notified when the bus is close to " + marker.getTitle() + "?")
                             .setPositiveButton(R.string.createNotification, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //vehicle.notifications.add(marker.getPosition());
 
                                     //Notification Maker using the AlertManager (to be tested)
                                     if (!marker.getTitle().equals("Bus")) {

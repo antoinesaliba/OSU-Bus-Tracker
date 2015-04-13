@@ -1,8 +1,6 @@
 package com.project.csc480.osubustracker;
 
-import android.content.Context;
 import android.util.Log;
-import android.util.Xml;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -10,19 +8,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by rafaelamfonseca on 3/2/15.
@@ -39,8 +26,6 @@ public class Vehicle {
     boolean keepDoing = true;
 
     threadBusPosition tBusPosition;
-    ArrayList<LatLng>notifications=new ArrayList<>();
-    Context context;
 
 
 
@@ -57,9 +42,8 @@ public class Vehicle {
     }
 
 
-    public void loadMapPosition(GoogleMap mMap, Context t) {
+    public void loadMapPosition(GoogleMap mMap) {
         Marker vehicleMarker;
-        context = t;
         //manager = m;
 
         vehicleMarker = mMap.addMarker(new MarkerOptions()
@@ -91,7 +75,7 @@ public class Vehicle {
 
             while (keepDoing) {
                     //sends the map, the vehicle marker, vehicle name, list of user desired notificaions and main activity context
-                    new XMLParser(mapAux, vehicleMarkerAux, vehicleName, notifications, context).execute();
+                    new XMLParser(mapAux, vehicleMarkerAux, vehicleName).execute();
 
                 //When XMLParser returns lat and long, update the marker here.
                 try {

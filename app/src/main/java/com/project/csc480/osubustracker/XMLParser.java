@@ -33,7 +33,7 @@ import android.app.NotificationManager;
 public class XMLParser extends AsyncTask<String, Void, String> {
 
     public static final int NOTIFICATION_ID = 1; //this can be any int
-    final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/busResponseAPI.xml";
+    final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/blueRouteVehicle.xml";
 
     GoogleMap map;
     Document doc;
@@ -43,24 +43,21 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     //XML Data
     int id;
     double lat, lon;
-    LatLng position;
 
     String vehicleName;
     ArrayList<LatLng>notifications; //stored coordinates where the user wants a notification
-    NotificationManager manager;
-    Context context;
 
     DocumentBuilderFactory dbFactory;
     DocumentBuilder dBuilder;
+    float direction;
 
-    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName, ArrayList<LatLng> notifications, Context t) {
+    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName) {
         try {
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
             this.vehicleMarker = vehicleMarker;
             this.vehicleName = vehicleName;
             map = mMap;
-            context = t;
             this.notifications = notifications;
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -96,6 +93,8 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
                 Element eElement = (Element) nNode;
 
+                direction = Float.parseFloat(eElement.getElementsByTagName("hdg").item(0).getTextContent().trim());
+
                 id = Integer.parseInt(eElement.getElementsByTagName("id").item(0).getTextContent().trim());
 
                 lat = Double.parseDouble(eElement.getElementsByTagName("lat").item(0).getTextContent().trim());
@@ -113,36 +112,9 @@ public class XMLParser extends AsyncTask<String, Void, String> {
         }
     }
 
-    private void checkNotifications(LatLng currentPosition){
-        if(notifications.isEmpty()){
-            return;
-        }else{
-            for(int i = 0; i< notifications.size(); i++){
-                System.out.println(notifications.size());
-                if(((currentPosition.latitude - 0.00004) < notifications.get(i).latitude &&  notifications.get(i).latitude < (currentPosition.latitude + 0.00004))||((currentPosition.longitude - 0.00004) < notifications.get(i).longitude &&  notifications.get(i).longitude < (currentPosition.longitude + 0.00004))){
-                    launchNotification();
-                    notifications.remove(i);
-                }
-            }
-        }
-    }
-
-    private void launchNotification(){
-        //Building the Notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.drawable.notificationicon);
-        builder.setContentTitle("CentrOz");
-        builder.setContentText("Bus Almost Here!");
-
-        manager = (android.app.NotificationManager) context.getSystemService(
-                context.NOTIFICATION_SERVICE);
-        manager.notify(NOTIFICATION_ID, builder.build());
-    }
-
     @Override
     protected void onPostExecute(String result) {
-        position = new LatLng(lat, lon);
-        vehicleMarker.setPosition(position);
-        checkNotifications(position);
+        vehicleMarker.setPosition(new LatLng(lat, lon));
+        vehicleMarker.setRotation(direction);
     }
 }

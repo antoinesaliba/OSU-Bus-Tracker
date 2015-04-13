@@ -21,7 +21,7 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
     DocumentBuilderFactory dbFactory;
     DocumentBuilder dBuilder;
     Document doc;
-    final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/busResponseAPI.xml";
+    final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/blueRouteVehicle.xml";
     String url;
     int id;
     double lat, lon;
@@ -69,7 +69,7 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
                 id = Integer.parseInt(eElement.getElementsByTagName("id").item(0).getTextContent().trim());
                 lat = Double.parseDouble(eElement.getElementsByTagName("lat").item(0).getTextContent().trim());
                 lon = Double.parseDouble(eElement.getElementsByTagName("lon").item(0).getTextContent().trim());
-                if(alertLat == lat && alertLon == lon) { //temporary - will be replaced by the 'location range' comparision
+                if((lat-0.00004)<alertLat && alertLat<(lat+0.00004)|| (lon-0.00004)<alertLon && alertLon<(lon+0.00004)) { //temporary - will be replaced by the 'location range' comparision
                     launchNotification();
                     Intent alarmIntent = new Intent(context, AlarmReceiver.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), notificationId, alarmIntent, 0);
@@ -102,7 +102,7 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
     private void launchNotification(){
         //Building the Notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.drawable.busicon);
+        builder.setSmallIcon(R.drawable.notificationicon);
         builder.setContentTitle("CentrOz");
         builder.setContentText("Time to move! Your bus is close to " + markerTitle + ".");
 
