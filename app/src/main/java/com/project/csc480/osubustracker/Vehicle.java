@@ -21,7 +21,7 @@ public class Vehicle {
     ArrayList<LatLng> mapPosition = new ArrayList<LatLng>();
 
     GoogleMap mapAux;
-    Marker vehicleMarkerAux;
+    Marker vehicleMarkerAux, vehicleArrowAux;
 
     boolean keepDoing = true;
 
@@ -43,7 +43,7 @@ public class Vehicle {
 
 
     public void loadMapPosition(GoogleMap mMap) {
-        Marker vehicleMarker;
+        Marker vehicleMarker, vehicleArrow;
         //manager = m;
 
         vehicleMarker = mMap.addMarker(new MarkerOptions()
@@ -51,8 +51,18 @@ public class Vehicle {
                 .title("Bus")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon)));
 
+        vehicleMarker.setAnchor(0.5f,0.5f);
+
+        vehicleArrow = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(0, 0))
+                .title("Bus")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busarrow)));
+
+        vehicleArrow.setAnchor(0.5f,0.5f);
+
         this.mapAux = mMap;
         this.vehicleMarkerAux = vehicleMarker;
+        this.vehicleArrowAux = vehicleArrow;
 
 
         this.tBusPosition = new threadBusPosition();
@@ -75,7 +85,7 @@ public class Vehicle {
 
             while (keepDoing) {
                     //sends the map, the vehicle marker, vehicle name, list of user desired notificaions and main activity context
-                    new XMLParser(mapAux, vehicleMarkerAux, vehicleName).execute();
+                    new XMLParser(mapAux, vehicleMarkerAux, vehicleArrowAux, vehicleName).execute();
 
                 //When XMLParser returns lat and long, update the marker here.
                 try {

@@ -38,7 +38,7 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     GoogleMap map;
     Document doc;
     String url;
-    Marker vehicleMarker;
+    Marker vehicleMarker, vehicleArrow;
 
     //XML Data
     int id;
@@ -51,12 +51,13 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     DocumentBuilder dBuilder;
     float direction;
 
-    public XMLParser(GoogleMap mMap, Marker vehicleMarker, String vehicleName) {
+    public XMLParser(GoogleMap mMap, Marker vehicleMarker, Marker vehicleArrow, String vehicleName) {
         try {
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
             this.vehicleMarker = vehicleMarker;
             this.vehicleName = vehicleName;
+            this.vehicleArrow = vehicleArrow;
             map = mMap;
             this.notifications = notifications;
         } catch (ParserConfigurationException e) {
@@ -115,6 +116,8 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         vehicleMarker.setPosition(new LatLng(lat, lon));
-        vehicleMarker.setRotation(direction);
+        //vehicleMarker.setRotation(direction);
+        vehicleArrow.setPosition(new LatLng(lat, lon));
+        vehicleArrow.setRotation(direction);
     }
 }
