@@ -1,9 +1,13 @@
 package com.project.csc480.osubustracker;
 
+import android.annotation.TargetApi;
 import android.app.*;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import org.w3c.dom.Document;
@@ -99,15 +103,38 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void launchNotification(){
         //Building the Notification
+        long[] vibrationPattern = {0, 500, 250, 500} ;
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.drawable.notificationicon);
         builder.setContentTitle("CentrOz");
         builder.setContentText("Time to move! Your bus is close to " + markerTitle + ".");
+
+        //Sound and vibrate in the notification
+        Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(uri);
+        builder.setVibrate(vibrationPattern);
+
+        /* Goes to the app when clicked on the notification*/
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(resultPendingIntent);
+
+        builder.setAutoCancel(true);
 
         manager = (android.app.NotificationManager) context.getSystemService(
                 context.NOTIFICATION_SERVICE);
         manager.notify(notificationId, builder.build());
     }
 }
+/*
+
+  */

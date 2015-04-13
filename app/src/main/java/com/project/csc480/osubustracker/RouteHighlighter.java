@@ -213,11 +213,15 @@ public class RouteHighlighter {
 
             ArrayList<LatLng> points = null;
             PolylineOptions lineOptions = null;
+            PolylineOptions lineOptions_back = null;
+
+            lineOptions = new PolylineOptions();
+            lineOptions_back = new PolylineOptions();
 
             // Traversing through all the routes
             for(int i=0;i<result.size();i++){
                 points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
+                //lineOptions = new PolylineOptions();
 
                 // Fetching i-th route
                 List<HashMap<String, String>> path = result.get(i);
@@ -237,10 +241,15 @@ public class RouteHighlighter {
                 lineOptions.addAll(points);
                 lineOptions.width(6);
 
+                lineOptions_back.addAll(points);
+                lineOptions_back.width(11);
+                lineOptions_back.color(Color.GRAY);
+                //lineOptions.geodesic(true);
+
                 if(green){
-                    lineOptions.color(Color.GREEN);
+                    lineOptions.color(0xFF75A800); //green
                 }else {
-                    lineOptions.color(Color.BLUE);
+                    lineOptions.color(0xFF24ADDE); // blue
                 }
             }
 
@@ -251,6 +260,8 @@ public class RouteHighlighter {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.447918, -76.534195), (float) 14.5));
 
             // Drawing polyline in the Google Map for the i-th route
+
+            map.addPolyline(lineOptions_back);
             map.addPolyline(lineOptions);
 
 
