@@ -102,7 +102,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
                 lon = Double.parseDouble(eElement.getElementsByTagName("lon").item(0).getTextContent().trim());
 
-                LatLng current = new LatLng(lat, lon);
 
             }
 
