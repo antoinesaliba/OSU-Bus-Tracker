@@ -46,19 +46,19 @@ public class Vehicle {
         Marker vehicleMarker, vehicleArrow;
         //manager = m;
 
-        vehicleMarker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Bus")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon)));
-
-        vehicleMarker.setAnchor(0.5f,0.5f);
-
         vehicleArrow = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .title("Bus")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busarrow)));
 
         vehicleArrow.setAnchor(0.5f,0.5f);
+
+        vehicleMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(0, 0))
+                .title("Bus")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon)));
+
+        vehicleMarker.setAnchor(0.5f,0.5f);
 
         this.mapAux = mMap;
         this.vehicleMarkerAux = vehicleMarker;
