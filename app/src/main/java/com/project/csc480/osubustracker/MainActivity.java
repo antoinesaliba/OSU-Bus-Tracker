@@ -330,7 +330,9 @@ public class MainActivity extends FragmentActivity {
                 //this returns whether the user has specified repeating notifications
                 boolean rNote = settings.getBoolean("rnote", false);
                 //this specifies whether user wants to cleared all notifications
-                clearNotifications();
+
+                /*clearNotifications();*/
+                
                 //this then gets set back to false after the clearing has been dealt with
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("cnote", false);
@@ -370,7 +372,7 @@ public class MainActivity extends FragmentActivity {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
-    public void clearNotifications() {
+    /*public void clearNotifications() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         boolean clearAll = settings.getBoolean("cnote", false);
         Integer tableSize = datasource.getAllNotifications().size();
@@ -386,7 +388,7 @@ public class MainActivity extends FragmentActivity {
             }
         }
         Toast.makeText(this, count + " notification(s) deleted successfully.", Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
