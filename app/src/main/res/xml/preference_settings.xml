@@ -24,9 +24,13 @@
         android:defaultValue="1">
     </ListPreference>
 
-    <CheckBoxPreference
-        android:key="cnote"
+    <com.project.csc480.osubustracker.MyDialogPreference
+        android:key="cnotes"
         android:title="Clear Notifications"
-        android:summary="Clear all active notifications">
-    </CheckBoxPreference>
+        android:summary="Clear all active notifications"
+        android:dialogMessage="Removes all current notifications for this app"
+        android:dialogTitle="Clear Notifications"
+        android:positiveButtonText="Yes"
+        android:negativeButtonText="No"
+        ></com.project.csc480.osubustracker.MyDialogPreference>
 </PreferenceScreen>
