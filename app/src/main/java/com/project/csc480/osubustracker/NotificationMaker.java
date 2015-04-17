@@ -7,6 +7,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.view.ContextThemeWrapper;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -30,7 +33,8 @@ public class NotificationMaker {
 
                 // check if a notification already exists for that particular bus stop
                 if (!notificationExists) {
-                    new AlertDialog.Builder(t, AlertDialog.THEME_HOLO_DARK)
+                    //t.setTheme(R.style.MyTheme);
+                    final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
                             .setTitle("Create Notification")
                             .setMessage("Would like to be notified when the bus is close to " + marker.getTitle() + "?")
                             .setPositiveButton(R.string.createNotification, new DialogInterface.OnClickListener() {
@@ -69,10 +73,13 @@ public class NotificationMaker {
                                     // do nothing
                                 }
                             })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setIcon(R.drawable.notificationicon)
                             .show();
+
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#17A5F7"));
+                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#17A5F7"));
                 } else {
-                    new AlertDialog.Builder(t, AlertDialog.THEME_HOLO_DARK)
+                    final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
                             .setTitle("Delete Notification")
                             .setMessage("A notification for this bus stop already exists. Would you like to delete it?")
                             .setPositiveButton(R.string.deleteNotification, new DialogInterface.OnClickListener() {
@@ -97,8 +104,10 @@ public class NotificationMaker {
                                     // do nothing
                                 }
                             })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setIcon(0)
                             .show();
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#17A5F7"));
+                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#17A5F7"));
                 }
             }
         });

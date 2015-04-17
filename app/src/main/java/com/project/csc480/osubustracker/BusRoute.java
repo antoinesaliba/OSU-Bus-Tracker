@@ -62,14 +62,14 @@ public class BusRoute {
             busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.4539526, -76.5405475), 1));
             busStops.add(new BusStop("Mackin", new LatLng(43.454804, -76.53475284576416),new LatLng(43.4549406, -76.5348609), 2));
             busStops.add(new BusStop("Johnson", new LatLng(43.45713231914716, -76.53761744499207),new LatLng(43.4571612, -76.5372736), 3));
-            busStops.add(new BusStop("Library", new LatLng(43.45426628708711, -76.54450535774231),new LatLng(43.454331, -76.5434586), 4));
+            busStops.add(new BusStop("Library", new LatLng(43.45436628708711, -76.54450535774231),new LatLng(43.454331, -76.5434586), 4));
             busStops.add(new BusStop("Mary Walker", new LatLng(43.455475, -76.542743),new LatLng(43.4554639, -76.5424972), 5));
             busStops.add(new BusStop("Shineman", new LatLng(43.454282, -76.539160),new LatLng(43.4548819, -76.5390339), 6));
             busStops.add(new BusStop("Village", new LatLng(43.44699935247679, -76.54906511306763),new LatLng(43.4469709, -76.5488651), 7));
             busStops.add(new BusStop("Oneida", new LatLng(43.44964763983892, -76.55072271823883),new LatLng(43.44964763983892, -76.55072271823883), 8));
             busStops.add(new BusStop("Rudolph Road Stop", new LatLng(43.45140790787459, -76.54988050460815),new LatLng(43.45140790787459, -76.54988050460815), 9));
             busStops.add(new BusStop("Rudolph Road Stop", new LatLng(43.45266966140318, -76.54818534851074),new LatLng(43.45266966140318, -76.54818534851074), 10));
-            busStops.add(new BusStop("Library", new LatLng(43.4542507104548, -76.54474139213562),new LatLng(43.4542507104548, -76.54474139213562), 11));
+            busStops.add(new BusStop("Librarys", new LatLng(43.4541507104548, -76.54450535774231),new LatLng(43.4542507104548, -76.54474139213562), 11));
             busStops.add(new BusStop("Library", new LatLng(43.45430522865038, -76.543599),new LatLng(43.45430522865038, -76.543599), 12));
             busStops.add(new BusStop("Waterbury", new LatLng(43.45654432636253, -76.54002070426941),new LatLng(43.45654432636253, -76.54002070426941), 13));
 

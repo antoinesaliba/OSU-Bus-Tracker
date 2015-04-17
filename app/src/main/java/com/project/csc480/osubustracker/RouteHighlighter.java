@@ -249,7 +249,7 @@ public class RouteHighlighter {
                 if(green){
                     lineOptions.color(0xFF75A800); //green
                 }else {
-                    lineOptions.color(0xFF24ADDE); // blue
+                    lineOptions.color(00000); // blue
                 }
             }
 
