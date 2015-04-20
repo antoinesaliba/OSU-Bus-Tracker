@@ -255,7 +255,7 @@ public class RouteHighlighter {
 
 
             if(!green)
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.541928), (float) 14.5));
             else
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.447918, -76.534195), (float) 14.5));
 

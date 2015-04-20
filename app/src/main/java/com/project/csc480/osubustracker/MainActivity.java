@@ -36,14 +36,11 @@ public class MainActivity extends FragmentActivity {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     RouteHighlighter highlighter;
     public static NotificationDataSource dataSource;
+    Vehicle currentVehicle;
 
-    //Creating the Blue Route object
+    //Creating the route objects
     BusRoute blueRoute = new BusRoute("blueRoute");
-
-    //Creating the Green Route object
     BusRoute greenRoute = new BusRoute("greenRoute");
-
-    Vehicle blueRouteVehicle = new Vehicle("blueRoute");
 
 
     ActionBarDrawerToggle mDrawerToggle;
@@ -85,7 +82,7 @@ public class MainActivity extends FragmentActivity {
 
             setDefaultRoute(); //based on settings, displays the prefered route and its vehicle icon
             //Notification Maker using the AlertManager
-            NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRouteVehicle, blueRoute);
+            NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRoute.vehicle, blueRoute);
 
             Log.i("MainActivity", "Setup passed...");
         }
@@ -268,12 +265,16 @@ public class MainActivity extends FragmentActivity {
 
         switch (position) {
             case 1:
+                if(!currentVehicle.getVehicleName().equals(blueRoute))
+                    currentVehicle.stopLoadingPosition();
                 changeRoute(blueRoute, false);
-                blueRouteVehicle.loadMapPosition(mMap);
+                blueRoute.vehicle.loadMapPosition(mMap);
                 break;
             case 2:
-                blueRouteVehicle.stopLoadingPosition();
+                if(!currentVehicle.getVehicleName().equals(greenRoute))
+                    currentVehicle.stopLoadingPosition();
                 changeRoute(greenRoute, true);
+                //greenRoute.vehicle.loadMapPosition(mMap);
                 break;
             case 3:
                 break;
@@ -372,10 +373,12 @@ public class MainActivity extends FragmentActivity {
         //this returns the number associated with the root, for example: 1 = blue route
         String dRoute = settings.getString("droute", "1");
         if(dRoute.equals("1")) {
+            currentVehicle = blueRoute.vehicle;
             displayView(1); // Blue Route
 
         }
         else if(dRoute.equals("2")) {
+            //currentVehicle = greenRoute.vehicle;
             displayView(2); // Green Route
 
         }
@@ -446,7 +449,7 @@ public class MainActivity extends FragmentActivity {
 
 
         //map.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
 
         setDefaultMapStyle();
 

@@ -9,12 +9,14 @@ import java.util.ArrayList;
  */
 public class BusRoute {
 
+    Vehicle vehicle;
     String routeName;
     ArrayList<BusStop> busStops = new ArrayList<BusStop>();
     ArrayList<LatLng> routePoints = new ArrayList<LatLng>();;
 
     public BusRoute(String routeName){
         this.routeName = routeName;
+        this.vehicle = new Vehicle(routeName);
     }
 
     public String getRouteName() {
