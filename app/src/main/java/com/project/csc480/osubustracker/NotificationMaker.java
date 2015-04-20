@@ -59,7 +59,7 @@ public class NotificationMaker {
                                         alarmIntent.putExtra("notificationId", notificationId);
 
                                         //creates the notification record on the database
-                                        MainActivity.datasource.createNotification(marker.getTitle(), route.getRouteName(), notificationId);
+                                        MainActivity.dataSource.createNotification(marker.getTitle(), route.getRouteName(), notificationId);
                                         //creates the notification thread each interval seconds to check the bus position
                                         int interval = 5000;
                                         pendingIntent = PendingIntent.getBroadcast(t, notificationId, alarmIntent, 0);
@@ -90,7 +90,7 @@ public class NotificationMaker {
                                     Integer notificationId = route.getBusStops().get(route.getBusStopIndex(marker.getTitle())).getNotificationId();
 
                                     // deletes the notification record from the database
-                                    MainActivity.datasource.deleteNotification(notificationId);
+                                    MainActivity.dataSource.deleteNotification(notificationId);
 
                                     // stops the notification thread that was checking the bus position
                                     Intent alarmIntent = new Intent(t, AlarmReceiver.class);
@@ -115,7 +115,7 @@ public class NotificationMaker {
 
     public boolean checkIfNotificationExists(String busStopName) {
 
-        List<com.project.csc480.osubustracker.Notification> notifications = MainActivity.datasource.getAllNotifications();
+        List<com.project.csc480.osubustracker.Notification> notifications = MainActivity.dataSource.getAllNotifications();
         for(int i = 0; i < notifications.size(); i++) {
             if(notifications.get(i).getBusStopName().equals(busStopName)) {
                 return true;

@@ -38,19 +38,19 @@ public class MyDialogPreference extends DialogPreference{
     }
 
     public void clearNotifications() {
-        MainActivity.datasource = new NotificationDataSource(this.getContext());
-        MainActivity.datasource.open();
+        MainActivity.dataSource = new NotificationDataSource(this.getContext());
+        MainActivity.dataSource.open();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         boolean clearAll = settings.getBoolean("cnote", false);
-        Integer tableSize = MainActivity.datasource.getAllNotifications().size();
+        Integer tableSize = MainActivity.dataSource.getAllNotifications().size();
         if(clearAll) {
             while (tableSize != 0) {
                 Intent alarmIntent = new Intent(this.getContext(), AlarmReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getContext(), MainActivity.datasource.getAllNotifications().get(0).getNotificationId(), alarmIntent, 0);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getContext(), MainActivity.dataSource.getAllNotifications().get(0).getNotificationId(), alarmIntent, 0);
                 AlarmManager alarmManager = (AlarmManager) this.getContext().getSystemService(Context.ALARM_SERVICE);
                 alarmManager.cancel(pendingIntent);
-                MainActivity.datasource.deleteNotification(MainActivity.datasource.getAllNotifications().get(0).getNotificationId());
-                tableSize = MainActivity.datasource.getAllNotifications().size();
+                MainActivity.dataSource.deleteNotification(MainActivity.dataSource.getAllNotifications().get(0).getNotificationId());
+                tableSize = MainActivity.dataSource.getAllNotifications().size();
             }
         }
     }

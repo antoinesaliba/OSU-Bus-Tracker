@@ -1,6 +1,5 @@
 package com.project.csc480.osubustracker;
 
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,14 +28,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     RouteHighlighter highlighter;
-    NavDrawer drawer = new NavDrawer();
-    public static NotificationDataSource datasource;
+    public static NotificationDataSource dataSource;
 
     //Creating the Blue Route object
     BusRoute blueRoute = new BusRoute("blueRoute");
@@ -46,6 +45,17 @@ public class MainActivity extends FragmentActivity {
 
     Vehicle blueRouteVehicle = new Vehicle("blueRoute");
 
+
+    ActionBarDrawerToggle mDrawerToggle;
+    ListView mDrawerList;
+
+    private DrawerLayout mDrawerLayout;
+
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    NavDrawerAdapter adapter;
+
+    List<NavDrawerItem> dataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +67,8 @@ public class MainActivity extends FragmentActivity {
         blueRoute.loadRoute();
         //Loading the route points and the bus stops
         greenRoute.loadRoute();
-        datasource = new NotificationDataSource(this);
-        datasource.open();
+        dataSource = new NotificationDataSource(this);
+        dataSource.open();
         setUpDrawerNavigation();
         checkNotification();
 
@@ -67,7 +77,7 @@ public class MainActivity extends FragmentActivity {
             // Start the reconnect Activity
             startActivity(new Intent(MainActivity.this, Reconnect.class));
             finish();
-        // if there is a network connection, continue on
+            // if there is a network connection, continue on
         } else {
             setUpMapIfNeeded();
             // Getting reference to SupportMapFragment of the activity_main
@@ -96,15 +106,15 @@ public class MainActivity extends FragmentActivity {
     // from the database because the app was closed.
     // This method will clean these 'lost' notifications.
     public void checkNotification() {
-        for(int i = 0; i < datasource.getAllNotifications().size(); i++) {
-            Integer notificationId = datasource.getAllNotifications().get(i).getNotificationId();
+        for(int i = 0; i < dataSource.getAllNotifications().size(); i++) {
+            Integer notificationId = dataSource.getAllNotifications().get(i).getNotificationId();
             boolean notificationExists = (PendingIntent.getBroadcast(this
-                                                                   , notificationId
-                                                                   , new Intent(this, AlarmReceiver.class)
-                                                                   , PendingIntent.FLAG_NO_CREATE) != null);
+                    , notificationId
+                    , new Intent(this, AlarmReceiver.class)
+                    , PendingIntent.FLAG_NO_CREATE) != null);
             if (!notificationExists)
             {
-                datasource.deleteNotification(notificationId);
+                dataSource.deleteNotification(notificationId);
                 Log.d("myTag", "DB: Lost notification deleted " + notificationId);
             }
         }
@@ -112,58 +122,68 @@ public class MainActivity extends FragmentActivity {
 
     private void setUpDrawerNavigation() {
 
-        /*** DRAWER ****/
-        drawer.mTitle = drawer.mDrawerTitle = getTitle();
-        // load slide menu items -> Bus Routes names
-        drawer.navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        // Initializing
+        dataList = new ArrayList<NavDrawerItem>();
+        mTitle = mDrawerTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
-        // nav drawer icons from resources
-        drawer.navMenuIcons = getResources()
-                .obtainTypedArray(R.array.nav_drawer_icons);
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+                GravityCompat.START);
 
-        drawer.mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        // Add Drawer Item to dataList
+        //dataList.add(new DrawerItem(true)); // adding a spinner to the list
 
-        drawer.navDrawerItems = new ArrayList<NavDrawerItem>();
+        //dataList.add(new DrawerItem("My Location", R.drawable.ic_launcher));
 
-        // adding nav drawer items to array
-        // Routes
-        // Blue Route
-        drawer.navDrawerItems.add(new NavDrawerItem(drawer.navMenuTitles[0], drawer.navMenuIcons.getResourceId(0, -1)));
-        // Green Route
-        drawer.navDrawerItems.add(new NavDrawerItem(drawer.navMenuTitles[1],drawer.navMenuIcons.getResourceId(0, -1)));
-        // 1A
-        drawer.navDrawerItems.add(new NavDrawerItem(drawer.navMenuTitles[2],drawer.navMenuIcons.getResourceId(0, -1)));
+        dataList.add(new NavDrawerItem("Laker")); // adding a header to the list
+        dataList.add(new NavDrawerItem("Blue Route", R.drawable.ic_launcher));
+        dataList.add(new NavDrawerItem("Green Route", R.drawable.ic_launcher));
 
 
-        // setting the nav drawer list adapter
-        drawer.adapter = new NavDrawerListAdapter(getApplicationContext(),
-                drawer.navDrawerItems);
-        drawer.mDrawerList.setAdapter(drawer.adapter);
+        dataList.add(new NavDrawerItem("To Walmart"));// adding a header to the list
+        dataList.add(new NavDrawerItem("1A - via Route 104 E", R.drawable.ic_launcher));
+        dataList.add(new NavDrawerItem("1B - via E Avenue", R.drawable.ic_launcher));
+        dataList.add(new NavDrawerItem("1C - via E Seneca St.", R.drawable.ic_launcher));
+        dataList.add(new NavDrawerItem("1D - via Birch Lane", R.drawable.ic_launcher));
 
-        // enabling action bar app icon and behaving it as toggle button
+        dataList.add(new NavDrawerItem("To College"));// adding a header to the list
+        dataList.add(new NavDrawerItem("2A - via Route 104 W", R.drawable.ic_launcher));
+        dataList.add(new NavDrawerItem("2B - via W Seneca St.", R.drawable.ic_launcher));
+        dataList.add(new NavDrawerItem("2C - via W Utica St.", R.drawable.ic_launcher));
+        dataList.add(new NavDrawerItem("2D - via Ellen Street", R.drawable.ic_launcher));
+
+        adapter = new NavDrawerAdapter(this, R.layout.custom_drawer_item,
+                dataList);
+
+        mDrawerList.setAdapter(adapter);
+
+        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
-        drawer.mDrawerToggle = new ActionBarDrawerToggle(this, drawer.mDrawerLayout,
+
+        /***************************/
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
         ){
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(drawer.mTitle);
+                getActionBar().setTitle(mTitle);
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(drawer.mDrawerTitle);
+                getActionBar().setTitle(mDrawerTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
                 invalidateOptionsMenu();
             }
         };
-        drawer.mDrawerLayout.setDrawerListener(drawer.mDrawerToggle);
 
-        drawer.mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
 
     }
 
@@ -171,7 +191,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // toggle nav drawer on selecting action bar app icon/title
-        if (drawer.mDrawerToggle.onOptionsItemSelected(item)) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         // Handle action bar actions click
@@ -196,15 +216,15 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // if nav drawer is opened, hide the action items
-        boolean drawerOpen = drawer.mDrawerLayout.isDrawerOpen(drawer.mDrawerList);
+//        boolean drawerOpen = mDrawer.isDrawerOpen(mDrawerList);
         //menu.findItem(R.id.action_overflow).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public void setTitle(CharSequence title) {
-        drawer.mTitle = title;
-        getActionBar().setTitle(drawer.mTitle);
+        mTitle = title;
+        getActionBar().setTitle(mTitle);
     }
 
     /**
@@ -216,14 +236,14 @@ public class MainActivity extends FragmentActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawer.mDrawerToggle.syncState();
+        mDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
-        drawer.mDrawerToggle.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -235,7 +255,9 @@ public class MainActivity extends FragmentActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             // display view for selected nav drawer item
-            displayView(position);
+            if (dataList.get(position).getTitle() == null) {
+                displayView(position);
+            }
         }
     }
 
@@ -245,25 +267,25 @@ public class MainActivity extends FragmentActivity {
     private void displayView(int position) {
 
         switch (position) {
-            case 0:
+            case 1:
                 changeRoute(blueRoute, false);
                 blueRouteVehicle.loadMapPosition(mMap);
                 break;
-            case 1:
+            case 2:
                 blueRouteVehicle.stopLoadingPosition();
                 changeRoute(greenRoute, true);
                 break;
-            case 2:
+            case 3:
                 break;
             default:
                 break;
         }
 
-            // update selected item and title, then close the drawer
-        drawer.mDrawerList.setItemChecked(position, true);
-        drawer.mDrawerList.setSelection(position);
-        setTitle(drawer.navMenuTitles[position]);
-        drawer.mDrawerLayout.closeDrawer(drawer.mDrawerList);
+        // update selected item and title, then close the drawer
+        mDrawerList.setItemChecked(position, true);
+        mDrawerList.setSelection(position);
+        setTitle(dataList.get(position).getItemName());
+        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
 
@@ -292,7 +314,7 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         //if(isConnected()) {
-        datasource.open();
+        dataSource.open();
         checkNotification();
         setUpMapIfNeeded();
         /*} else {
@@ -303,7 +325,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        datasource.open();
+        dataSource.open();
         checkNotification();
 
     }
@@ -311,7 +333,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        datasource.open();
+        dataSource.open();
         checkNotification();
     }
 
@@ -332,7 +354,7 @@ public class MainActivity extends FragmentActivity {
                 //this specifies whether user wants to cleared all notifications
 
                 /*clearNotifications();*/
-                
+
                 //this then gets set back to false after the clearing has been dealt with
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("cnote", false);
@@ -350,11 +372,11 @@ public class MainActivity extends FragmentActivity {
         //this returns the number associated with the root, for example: 1 = blue route
         String dRoute = settings.getString("droute", "1");
         if(dRoute.equals("1")) {
-            displayView(0); // Blue Route
+            displayView(1); // Blue Route
 
         }
-            else if(dRoute.equals("2")) {
-            displayView(1); // Green Route
+        else if(dRoute.equals("2")) {
+            displayView(2); // Green Route
 
         }
 
@@ -375,16 +397,16 @@ public class MainActivity extends FragmentActivity {
     /*public void clearNotifications() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         boolean clearAll = settings.getBoolean("cnote", false);
-        Integer tableSize = datasource.getAllNotifications().size();
-        Integer count = datasource.getAllNotifications().size();
+        Integer tableSize = dataSource.getAllNotifications().size();
+        Integer count = dataSource.getAllNotifications().size();
         if(clearAll) {
             while (tableSize != 0) {
                 Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), datasource.getAllNotifications().get(0).getNotificationId(), alarmIntent, 0);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), dataSource.getAllNotifications().get(0).getNotificationId(), alarmIntent, 0);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 alarmManager.cancel(pendingIntent);
-                datasource.deleteNotification(datasource.getAllNotifications().get(0).getNotificationId());
-                tableSize = datasource.getAllNotifications().size();
+                dataSource.deleteNotification(dataSource.getAllNotifications().get(0).getNotificationId());
+                tableSize = dataSource.getAllNotifications().size();
             }
         }
         Toast.makeText(this, count + " notification(s) deleted successfully.", Toast.LENGTH_SHORT).show();
