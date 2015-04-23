@@ -1,10 +1,14 @@
 package com.project.csc480.osubustracker;
 
+import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -21,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -202,6 +207,21 @@ public class MainActivity extends FragmentActivity {
                 Uri uriUrl = Uri.parse("http://www.centro.org/Schedules-Oswego.aspx");
                 Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
                 startActivity(launchBrowser);
+            case R.id.action_about_us:
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();
+                alertDialog.setTitle("CentrOz");
+                alertDialog.setMessage("Created by:\nAlex Merluzzi, Antoine Saliba, Christian Shank, Lucas Neubert, Molly Boardman, Pranay Chapagain, Rafaela da Fonseca, Scott Millspaugh");
+                alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Close", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //finish();
+                    }
+                });
+
+                alertDialog.setIcon(R.drawable.notificationicon);
+                alertDialog.show();
+
+
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#17A5F7"));
             default:
                 return super.onOptionsItemSelected(item);
         }
