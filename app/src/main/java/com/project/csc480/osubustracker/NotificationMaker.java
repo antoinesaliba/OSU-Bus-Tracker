@@ -113,7 +113,7 @@ public class NotificationMaker {
         });
     }
 
-    public boolean checkIfNotificationExists(String busStopName) {
+    public static boolean checkIfNotificationExists(String busStopName) {
 
         List<com.project.csc480.osubustracker.Notification> notifications = MainActivity.dataSource.getAllNotifications();
         for(int i = 0; i < notifications.size(); i++) {
