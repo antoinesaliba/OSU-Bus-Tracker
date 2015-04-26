@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -33,6 +34,7 @@ public class NotificationMaker {
 
                 // check if a notification already exists for that particular bus stop
                 if (!notificationExists) {
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon_orange));
                     //t.setTheme(R.style.MyTheme);
                     final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                             .setTitle("Create Notification")
@@ -79,6 +81,7 @@ public class NotificationMaker {
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#17A5F7"));
                     alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#17A5F7"));
                 } else {
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon));
                     final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                             .setTitle("Delete Notification")
                             .setMessage("A notification for this bus stop already exists. Would you like to delete it?")

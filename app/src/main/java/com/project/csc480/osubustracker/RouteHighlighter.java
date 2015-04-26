@@ -54,19 +54,11 @@ public class RouteHighlighter {
 
         for(int i = 0; i < route.getBusStops().size(); i++) {
             // Add new marker to the Google Map Android API V2
-            if (NotificationMaker.checkIfNotificationExists(route.getBusStops().get(i).getName())) {
                 map.addMarker(new MarkerOptions()
-                        .position(route.getBusStops().get(i).getCoordinates())
-                        .title(route.getBusStops().get(i).getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon_orange)))
-                        .setSnippet("Click to set notification");
-            } else {
-                map.addMarker(new MarkerOptions()
-                        .position(route.getBusStops().get(i).getCoordinates())
-                        .title(route.getBusStops().get(i).getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon)))
-                        .setSnippet("Click to set notification");
-            }
+                .position(route.getBusStops().get(i).getCoordinates())
+                .title(route.getBusStops().get(i).getName())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon)))
+                .setSnippet("Click to set notification");
         }
 
         /**
