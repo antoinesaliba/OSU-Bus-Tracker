@@ -32,7 +32,6 @@ import android.app.NotificationManager;
 
 public class XMLParser extends AsyncTask<String, Void, String> {
 
-    public static final int NOTIFICATION_ID = 1; //this can be any int
     final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/blueRouteVehicle.xml";
 
     GoogleMap map;
@@ -45,7 +44,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     double lat, lon;
 
     String vehicleName;
-    ArrayList<LatLng>notifications; //stored coordinates where the user wants a notification
 
     DocumentBuilderFactory dbFactory;
     DocumentBuilder dBuilder;
@@ -59,7 +57,6 @@ public class XMLParser extends AsyncTask<String, Void, String> {
             this.vehicleName = vehicleName;
             this.vehicleArrow = vehicleArrow;
             map = mMap;
-            this.notifications = notifications;
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }

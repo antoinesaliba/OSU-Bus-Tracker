@@ -8,10 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.Marker;
+
 import org.xml.sax.SAXException;
 
 
 import java.io.IOException;
+import java.util.Map;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 public class AlarmReceiver extends BroadcastReceiver {

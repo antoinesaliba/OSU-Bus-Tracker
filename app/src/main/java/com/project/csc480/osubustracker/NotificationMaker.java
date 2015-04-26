@@ -34,7 +34,7 @@ public class NotificationMaker {
 
                 // check if a notification already exists for that particular bus stop
                 if (!notificationExists) {
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon_orange));
+
                     //t.setTheme(R.style.MyTheme);
                     final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                             .setTitle("Create Notification")
@@ -44,6 +44,8 @@ public class NotificationMaker {
 
                                     //Notification Maker using the AlertManager (to be tested)
                                     if (!marker.getTitle().equals("Bus")) {
+
+                                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon_orange));
                                         Toast.makeText(t, "Notification Created!", Toast.LENGTH_SHORT).show();
 
                                         // each bus stop has a particular alertPosition
@@ -81,12 +83,13 @@ public class NotificationMaker {
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#17A5F7"));
                     alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#17A5F7"));
                 } else {
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon));
                     final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                             .setTitle("Delete Notification")
                             .setMessage("A notification for this bus stop already exists. Would you like to delete it?")
                             .setPositiveButton(R.string.deleteNotification, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+
+                                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon));
                                     Toast.makeText(t, "Notification Deleted!", Toast.LENGTH_SHORT).show();
 
                                     // each bus stop has a unique notificationId to keep track of the notifications

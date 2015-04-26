@@ -10,6 +10,7 @@ public class BusStop {
     LatLng coordinates;
     LatLng alertPosition;
     Integer notificationId;
+    boolean notification;
 
     public BusStop(String n, LatLng coordinates, LatLng alertPosition, Integer notificationId){
         this.name = n;
