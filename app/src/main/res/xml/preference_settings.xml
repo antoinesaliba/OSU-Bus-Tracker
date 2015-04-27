@@ -5,6 +5,7 @@
         android:title="Show my Current Location"
         android:summary="While enable, show your current location in the map"
         android:defaultValue="false">
+
     </CheckBoxPreference>
 
     <ListPreference
