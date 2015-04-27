@@ -142,7 +142,7 @@ public class MainActivity extends FragmentActivity {
         // Add Drawer Item to dataList
         //dataList.add(new DrawerItem(true)); // adding a spinner to the list
 
-        //dataList.add(new DrawerItem("My Location", R.drawable.ic_launcher));
+        dataList.add(new NavDrawerItem("My Location", R.drawable.ic_launcher));
 
         dataList.add(new NavDrawerItem("Laker")); // adding a header to the list
         dataList.add(new NavDrawerItem("Blue Route", R.drawable.ic_launcher));
@@ -290,25 +290,32 @@ public class MainActivity extends FragmentActivity {
      * */
     private void displayView(int position) {
 
+        if(position != 0)
+            myCurrentLocationSettings(); // getting the info accordingly to the settings
+
         switch (position) {
-            case 1:
+            case 0:
+                mMap.clear();
+                mMap.setMyLocationEnabled(true);
+                break;
+            case 2:
                 if(!currentVehicle.getVehicleName().equals(blueRoute))
                     currentVehicle.stopLoadingPosition();
                 changeRoute(blueRoute);
                 blueRoute.vehicle.loadMapPosition(mMap);
                 break;
-            case 2:
+            case 3:
                 if(!currentVehicle.getVehicleName().equals(greenRoute))
                     currentVehicle.stopLoadingPosition();
                 changeRoute(greenRoute);
                 //greenRoute.vehicle.loadMapPosition(mMap);
                 break;
-            case 4:
+            case 5:
                 if(!currentVehicle.getVehicleName().equals(walmart1A))
                     currentVehicle.stopLoadingPosition();
                 changeRoute(walmart1A);
                 break;
-            case 5:
+            case 6:
                 if(!currentVehicle.getVehicleName().equals(walmart1B))
                     currentVehicle.stopLoadingPosition();
                 changeRoute(walmart1B);
@@ -384,6 +391,7 @@ public class MainActivity extends FragmentActivity {
 
                 setDefaultRoute();
                 setDefaultMapStyle();
+                myCurrentLocationSettings();
 
                 //this returns whether the user has specified repeating notifications
                 boolean rNote = settings.getBoolean("rnote", false);
@@ -409,22 +417,22 @@ public class MainActivity extends FragmentActivity {
         String dRoute = settings.getString("droute", "1");
         if(dRoute.equals("1")) {
             currentVehicle = blueRoute.vehicle;
-            displayView(1); // Blue Route
+            displayView(2); // Blue Route
 
         }
         else if(dRoute.equals("2")) {
             currentVehicle = greenRoute.vehicle;
-            displayView(2); // Green Route
+            displayView(3); // Green Route
 
         }
         else if(dRoute.equals("3")) {
             currentVehicle = walmart1A.vehicle;
-            displayView(4); // walmart 1A
+            displayView(5); // walmart 1A
 
         }
         else if(dRoute.equals("4")) {
             currentVehicle = walmart1B.vehicle;
-            displayView(5); // walmart 1A
+            displayView(6); // walmart 1A
 
         }
 
@@ -442,6 +450,17 @@ public class MainActivity extends FragmentActivity {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
+    private void myCurrentLocationSettings()
+    {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        //this returns the preferred map style
+        boolean cLocation = settings.getBoolean("clocation", false);
+
+        if(cLocation)
+            mMap.setMyLocationEnabled(true);
+        else
+            mMap.setMyLocationEnabled(false);
+    }
     /*public void clearNotifications() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         boolean clearAll = settings.getBoolean("cnote", false);
@@ -493,7 +512,7 @@ public class MainActivity extends FragmentActivity {
     private void setUpMap(GoogleMap map) {
 
 
-        //map.setMyLocationEnabled(true);
+        //mMap.setMyLocationEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
 
         setDefaultMapStyle();
