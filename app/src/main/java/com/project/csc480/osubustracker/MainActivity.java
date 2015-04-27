@@ -549,7 +549,7 @@ public class MainActivity extends FragmentActivity {
                 }else{
                     Location myLocation = mMap.getMyLocation();
 
-                    //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), (float) 14.5));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), (float) 14.5));
                 }
 
                 return true;
