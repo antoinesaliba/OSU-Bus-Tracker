@@ -8,7 +8,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -29,19 +28,20 @@ import java.util.List;
  */
 public class RouteHighlighter {
     ArrayList<LatLng> markerPoints;
-    boolean green; //used to tell the lineOptions to make the green route line green
     public GoogleMap map;
+
+    BusRoute currentRoute;
 
     public RouteHighlighter(GoogleMap m){
         markerPoints = new ArrayList<LatLng>();
-        green = false;
         this.map = m;
     }
 
     //give it the app map, the route you want to highlight and a boolean for whether the highlight should be green or not(blue)
-    public void enableRoute(BusRoute route, boolean g) {
+    public void enableRoute(BusRoute route) {
 
-        green = g;
+
+        currentRoute = route;
 
         // Already 10 locations with 8 waypoints and 1 start location and 1 end location.
         // Up to 8 waypoints are allowed in a query for non-business users
@@ -98,7 +98,10 @@ public class RouteHighlighter {
             if(i==2)
                 //   waypoints = "waypoints=optimize:false|";
                 waypoints = "waypoints=";
-            waypoints +=  point.latitude + "," + point.longitude + "|";
+            waypoints +=  point.latitude + "," + point.longitude;
+
+            if(i != markerPoints.size()-1 ) //the last item
+                waypoints += "|";
         }
 
         // Building the parameters to the web service
@@ -108,6 +111,8 @@ public class RouteHighlighter {
         String output = "json";
 
         // Building the url to the web service
+
+        Log.d("URL MAPS","Url: "+ parameters);
         String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
 
         return url;
@@ -219,7 +224,9 @@ public class RouteHighlighter {
             lineOptions_back = new PolylineOptions();
 
             // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
+            //for(int i=0;i<result.size();i++)
+            int i = 0; // We only need the first one - Neubert
+            {
                 points = new ArrayList<LatLng>();
                 //lineOptions = new PolylineOptions();
 
@@ -227,7 +234,7 @@ public class RouteHighlighter {
                 List<HashMap<String, String>> path = result.get(i);
 
                 // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
+                for(int j=0;j<path.size()-2;j++){
                     HashMap<String,String> point = path.get(j);
 
                     double lat = Double.parseDouble(point.get("lat"));
@@ -244,20 +251,13 @@ public class RouteHighlighter {
                 lineOptions_back.addAll(points);
                 lineOptions_back.width(11);
                 lineOptions_back.color(Color.GRAY);
-                //lineOptions.geodesic(true);
+                lineOptions.geodesic(true);
 
-                if(green){
-                    lineOptions.color(0xFF75A800); //green
-                }else {
-                    lineOptions.color(00000); // blue
-                }
-            }
+                lineOptions.color(currentRoute.routeColor);
 
+             }
 
-            if(!green)
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.541928), (float) 14.5));
-            else
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.447918, -76.534195), (float) 14.5));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentRoute.centralPoint, currentRoute.routeZoom));
 
             // Drawing polyline in the Google Map for the i-th route
 

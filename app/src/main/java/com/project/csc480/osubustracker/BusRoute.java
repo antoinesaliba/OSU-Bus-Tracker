@@ -2,6 +2,7 @@ package com.project.csc480.osubustracker;
 
 import com.google.android.gms.maps.model.LatLng;
 
+
 import java.util.ArrayList;
 
 /**
@@ -12,7 +13,11 @@ public class BusRoute {
     Vehicle vehicle;
     String routeName;
     ArrayList<BusStop> busStops = new ArrayList<BusStop>();
-    ArrayList<LatLng> routePoints = new ArrayList<LatLng>();;
+    ArrayList<LatLng> routePoints = new ArrayList<LatLng>();
+
+    int routeColor;
+    LatLng centralPoint;
+    float routeZoom;
 
     public BusRoute(String routeName){
         this.routeName = routeName;
@@ -84,38 +89,92 @@ public class BusRoute {
             busStops.add(new BusStop("Romney", new LatLng(43.447918, -76.534195),new LatLng(43.447918, -76.534195), 15));
             busStops.add(new BusStop("Laker", new LatLng(43.446368, -76.53462409973145),new LatLng(43.446368, -76.53462409973145), 16));
             busStops.add(new BusStop("Laker", new LatLng(43.44528569298516, -76.53571844100952),new LatLng(43.44528569298516, -76.53571844100952), 17));
+
+
+
+        }
+        else if(routeName.equals("walmart1A")) {
+            //GREEN ROUTE BUS STOPS
+            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.453838, -76.540628), 18));
+            busStops.add(new BusStop("Downtown", new LatLng(43.456607, -76.511054),new LatLng(43.456607, -76.511054), 19));
+        }
+        else if(routeName.equals("walmart1B")) {
+            //GREEN ROUTE BUS STOPS
+            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.453838, -76.540628), 18));
+            busStops.add(new BusStop("Downtown", new LatLng(43.456607, -76.511054),new LatLng(43.456607, -76.511054), 19));
         }
     }
 
     public void loadRoutePoints() {
 
         if(routeName.equals("blueRoute")) {
-                //BLUE ROUTE HIGHLIGHTING
-                routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER // Origin
-                routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER // Destination
-                routePoints.add(new LatLng(43.453523, -76.541181)); // CIRCLE
-                routePoints.add(new LatLng(43.457295865792744, -76.53929114341736)); // RIGGS_HALL
-                routePoints.add(new LatLng(43.450535, -76.549731)); // ONONDAGA
-                routePoints.add(new LatLng(43.44699935247679, -76.54906511306763)); // VILLAGE
-                routePoints.add(new LatLng(43.454309, -76.543996)); // PENFIELD_LIBRARY
-                routePoints.add(new LatLng(43.454282, -76.539160)); // SHINEMAN
+            //BLUE ROUTE HIGHLIGHTING
+            routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER // Origin
+            routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER // Destination
+            routePoints.add(new LatLng(43.453523, -76.541181)); // CIRCLE
+            routePoints.add(new LatLng(43.457295865792744, -76.53929114341736)); // RIGGS_HALL
+            routePoints.add(new LatLng(43.450535, -76.549731)); // ONONDAGA
+            routePoints.add(new LatLng(43.44699935247679, -76.54906511306763)); // VILLAGE
+            routePoints.add(new LatLng(43.454309, -76.543996)); // PENFIELD_LIBRARY
+            routePoints.add(new LatLng(43.454282, -76.539160)); // SHINEMAN
+
+            routeColor = App.getContext().getResources().getColor(R.color.route_color_blue) ;
+            centralPoint = new LatLng(43.453838, -76.541928);
+            routeZoom = (float) 14.5;
 
         } else if(routeName.equals("greenRoute")) {
-                //GREEN ROUTE HIGHLIGHTING
-                routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER
-                routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER
-                routePoints.add(new LatLng(43.446368, -76.53462409973145)); //LAKER
-                routePoints.add(new LatLng(43.44528569298516, -76.53548240661621)); //LAKER2
-                routePoints.add(new LatLng(43.44598674137218, -76.53653383255005)); //LAKER3
-                routePoints.add(new LatLng(43.44676567449565, -76.53561115264893)); //LAKER4
-                routePoints.add(new LatLng(43.4462048436578, -76.53455972671509)); //LAKER5
-                routePoints.add(new LatLng(43.44531685086377, -76.53541803359985)); //LAKER6
-                routePoints.add(new LatLng(43.447918, -76.534195)); //ROMNEY
-                routePoints.add(new LatLng(43.45357312306545, -76.53239250183105)); //FIFTHAVE
+            //GREEN ROUTE HIGHLIGHTING
+            routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER
+            routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER
+            routePoints.add(new LatLng(43.446368, -76.53462409973145)); //LAKER
+            routePoints.add(new LatLng(43.44528569298516, -76.53548240661621)); //LAKER2
+            routePoints.add(new LatLng(43.44598674137218, -76.53653383255005)); //LAKER3
+            routePoints.add(new LatLng(43.44676567449565, -76.53561115264893)); //LAKER4
+            routePoints.add(new LatLng(43.4462048436578, -76.53455972671509)); //LAKER5
+            routePoints.add(new LatLng(43.44531685086377, -76.53541803359985)); //LAKER6
+            routePoints.add(new LatLng(43.447918, -76.534195)); //ROMNEY
+            routePoints.add(new LatLng(43.45357312306545, -76.53239250183105)); //FIFTHAVE
 
 
 
-        } else {
+
+            routeColor = App.getContext().getResources().getColor(R.color.route_color_green) ;
+            centralPoint = new LatLng(43.447918, -76.534195);
+            routeZoom = (float) 14.5;
+
+
+        } else if(routeName.equals("walmart1A")) {
+            //GREEN ROUTE HIGHLIGHTING
+            routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER
+            routePoints.add(new LatLng(43.464295, -76.479034)); // Walmart
+            routePoints.add(new LatLng(43.456607, -76.511054)); //Downtown BusStop
+
+
+
+
+            routeColor = App.getContext().getResources().getColor(R.color.route_color_1a) ;
+            centralPoint = new LatLng(43.456607, -76.511054);
+            routeZoom = (float) 12.8;
+
+
+        }
+        else if(routeName.equals("walmart1B")) {
+            //GREEN ROUTE HIGHLIGHTING
+            routePoints.add(new LatLng(43.453838, -76.540628)); // CAMPUS_CENTER
+            routePoints.add(new LatLng(43.464295, -76.479034)); // Walmart
+            routePoints.add(new LatLng(43.459077, -76.512668)); // Corner W Seneca St and W 1st St
+            routePoints.add(new LatLng(43.456607, -76.511054)); //Downtown BusStop
+
+
+
+
+            routeColor = App.getContext().getResources().getColor(R.color.route_color_1a) ;
+            centralPoint = new LatLng(43.456607, -76.511054);
+            routeZoom = (float) 12.8;
+
+
+        }
+        else {
             //return error
         }
     }

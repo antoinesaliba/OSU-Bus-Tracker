@@ -46,6 +46,8 @@ public class MainActivity extends FragmentActivity {
     //Creating the route objects
     BusRoute blueRoute = new BusRoute("blueRoute");
     BusRoute greenRoute = new BusRoute("greenRoute");
+    BusRoute walmart1A = new BusRoute("walmart1A");
+    BusRoute walmart1B = new BusRoute("walmart1B");
 
 
     ActionBarDrawerToggle mDrawerToggle;
@@ -69,6 +71,11 @@ public class MainActivity extends FragmentActivity {
         blueRoute.loadRoute();
         //Loading the route points and the bus stops
         greenRoute.loadRoute();
+
+        walmart1A.loadRoute();
+
+        walmart1B.loadRoute();
+
         dataSource = new NotificationDataSource(this);
         dataSource.open();
         setUpDrawerNavigation();
@@ -186,6 +193,7 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 
+
     }
 
 
@@ -209,7 +217,7 @@ public class MainActivity extends FragmentActivity {
             case R.id.action_about_us:
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();
                 alertDialog.setTitle("CentrOz");
-                alertDialog.setMessage("Created by:\nAlex Merluzzi, Antoine Saliba, Christian Shank, Lucas Neubert, Molly Boardman, Pranay Chapagain, Rafaela da Fonseca, Scott Millspaugh");
+                alertDialog.setMessage("Created by:\nAlex Merluzzi, Antoine Saliba, Christian Shank, Lucas Neubert, Molly Boardman, Pranay Chapagain, Rafaela Fonseca, Scott Millspaugh");
                 alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Close", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //finish();
@@ -286,16 +294,24 @@ public class MainActivity extends FragmentActivity {
             case 1:
                 if(!currentVehicle.getVehicleName().equals(blueRoute))
                     currentVehicle.stopLoadingPosition();
-                changeRoute(blueRoute, false);
+                changeRoute(blueRoute);
                 blueRoute.vehicle.loadMapPosition(mMap);
                 break;
             case 2:
                 if(!currentVehicle.getVehicleName().equals(greenRoute))
                     currentVehicle.stopLoadingPosition();
-                changeRoute(greenRoute, true);
+                changeRoute(greenRoute);
                 //greenRoute.vehicle.loadMapPosition(mMap);
                 break;
-            case 3:
+            case 4:
+                if(!currentVehicle.getVehicleName().equals(walmart1A))
+                    currentVehicle.stopLoadingPosition();
+                changeRoute(walmart1A);
+                break;
+            case 5:
+                if(!currentVehicle.getVehicleName().equals(walmart1B))
+                    currentVehicle.stopLoadingPosition();
+                changeRoute(walmart1B);
                 break;
             default:
                 break;
@@ -309,10 +325,10 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    public void changeRoute(BusRoute route, boolean g){ //changes the current route being highlighted on the map
+    public void changeRoute(BusRoute route){ //changes the current route being highlighted on the map
         mMap.clear();
         highlighter = new RouteHighlighter(mMap);
-        highlighter.enableRoute(route, g);
+        highlighter.enableRoute(route);
     }
 
     //Christian's Code
@@ -397,8 +413,18 @@ public class MainActivity extends FragmentActivity {
 
         }
         else if(dRoute.equals("2")) {
-            //currentVehicle = greenRoute.vehicle;
+            currentVehicle = greenRoute.vehicle;
             displayView(2); // Green Route
+
+        }
+        else if(dRoute.equals("3")) {
+            currentVehicle = walmart1A.vehicle;
+            displayView(4); // walmart 1A
+
+        }
+        else if(dRoute.equals("4")) {
+            currentVehicle = walmart1B.vehicle;
+            displayView(5); // walmart 1A
 
         }
 
@@ -468,7 +494,7 @@ public class MainActivity extends FragmentActivity {
 
 
         //map.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
 
         setDefaultMapStyle();
 
