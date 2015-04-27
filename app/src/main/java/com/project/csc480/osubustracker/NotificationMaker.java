@@ -48,8 +48,11 @@ public class NotificationMaker {
                                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon_orange));
                                         Toast.makeText(t, "Notification Created!", Toast.LENGTH_SHORT).show();
 
+                                        BusStop busStop = route.getBusStops().get(route.getBusStopIndex(marker.getTitle()));
+                                        busStop.notification = true;
                                         // each bus stop has a particular alertPosition
-                                        LatLng alertPosition = route.getBusStops().get(route.getBusStopIndex(marker.getTitle())).getAlertPosition();
+                                        LatLng alertPosition = busStop.getAlertPosition();
+                                        route.getBusStops().get(route.getBusStopIndex(marker.getTitle())).notification = true;
                                         Double lat = alertPosition.latitude;
                                         Double lon = alertPosition.longitude;
                                         // each bus stop has a unique notificationId to keep track of the notifications

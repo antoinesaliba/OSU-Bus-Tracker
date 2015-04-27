@@ -53,12 +53,23 @@ public class RouteHighlighter {
         }
 
         for(int i = 0; i < route.getBusStops().size(); i++) {
-            // Add new marker to the Google Map Android API V2
+
+            NotificationDataSource data = MainActivity.dataSource;
+
+            if(find(data,route.getBusStops().get(i).getName())){
                 map.addMarker(new MarkerOptions()
-                .position(route.getBusStops().get(i).getCoordinates())
-                .title(route.getBusStops().get(i).getName())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon)))
-                .setSnippet("Click to set notification");
+                        .position(route.getBusStops().get(i).getCoordinates())
+                        .title(route.getBusStops().get(i).getName())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon_orange)))
+                        .setSnippet("Click to delete notification");
+            }else {
+                // Add new marker to the Google Map Android API V2
+                map.addMarker(new MarkerOptions()
+                        .position(route.getBusStops().get(i).getCoordinates())
+                        .title(route.getBusStops().get(i).getName())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon)))
+                        .setSnippet("Click to set notification");
+            }
         }
 
         /**
@@ -78,6 +89,15 @@ public class RouteHighlighter {
             // Start downloading json data from Google Directions API
             downloadTask.execute(url);
         }
+    }
+
+    public boolean find(NotificationDataSource data, String name){
+        for(int i = 0; i < data.getAllNotifications().size(); i++) {
+            if (data.getAllNotifications().get(i).getBusStopName().equals(name)) {
+                return true;
+            }
+        }
+            return false;
     }
 
     private String getDirectionsUrl(LatLng origin,LatLng dest){
