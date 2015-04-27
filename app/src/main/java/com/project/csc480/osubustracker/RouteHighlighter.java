@@ -277,7 +277,8 @@ public class RouteHighlighter {
 
              }
 
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentRoute.centralPoint, currentRoute.routeZoom));
+            //map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentRoute.centralPoint, currentRoute.routeZoom));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentRoute.centralPoint, currentRoute.routeZoom));
 
             // Drawing polyline in the Google Map for the i-th route
 

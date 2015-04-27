@@ -8,23 +8,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.location.Location;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,6 +35,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -227,7 +231,7 @@ public class MainActivity extends FragmentActivity {
                 alertDialog.show();
 
 
-                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#17A5F7"));
+                alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#17A5F7"));
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -292,36 +296,42 @@ public class MainActivity extends FragmentActivity {
         if(position != 0)
             myCurrentLocationSettings(); // getting the info accordingly to the settings
 
+
+
         switch (position) {
             case 0:
                 mMap.clear();
                 mMap.setMyLocationEnabled(true);
                 break;
             case 2:
-                if(!currentVehicle.getVehicleName().equals(blueRoute))
+                if(!currentVehicle.getVehicleName().equals("blueRoute"))
                     currentVehicle.stopLoadingPosition();
                 changeRoute(blueRoute);
                 blueRoute.vehicle.loadMapPosition(mMap);
                 break;
             case 3:
-                if(!currentVehicle.getVehicleName().equals(greenRoute))
+                if(!currentVehicle.getVehicleName().equals("greenRoute"))
                     currentVehicle.stopLoadingPosition();
                 changeRoute(greenRoute);
                 //greenRoute.vehicle.loadMapPosition(mMap);
                 break;
             case 5:
-                if(!currentVehicle.getVehicleName().equals(walmart1A))
+                if(!currentVehicle.getVehicleName().equals("walmart1A"))
                     currentVehicle.stopLoadingPosition();
                 changeRoute(walmart1A);
                 break;
             case 6:
-                if(!currentVehicle.getVehicleName().equals(walmart1B))
+                if(!currentVehicle.getVehicleName().equals("walmart1B"))
                     currentVehicle.stopLoadingPosition();
                 changeRoute(walmart1B);
                 break;
             default:
                 break;
         }
+
+
+        if(position != 0 && (currentVehicle.getVehicleName().equals("blueRoute") || currentVehicle.getVehicleName().equals("greenRoute")))
+            checkDayOfWeek();
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
@@ -331,10 +341,38 @@ public class MainActivity extends FragmentActivity {
     }
 
 
+    private void checkDayOfWeek(){
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        if(day == Calendar.SUNDAY)
+        {
+            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();
+            alertDialog.setTitle("Not Running Today");
+            alertDialog.setMessage("Hey, this route doesn't run on Sundays.");
+            alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    //finish();
+                }
+            });
+
+            alertDialog.setIcon(R.drawable.notificationicon);
+            alertDialog.show();
+
+            TextView messageView = (TextView)alertDialog.findViewById(android.R.id.message);
+            messageView.setGravity(Gravity.CENTER);
+
+            alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#17A5F7"));
+        }
+
+    }
+
+
     public void changeRoute(BusRoute route){ //changes the current route being highlighted on the map
         mMap.clear();
         highlighter = new RouteHighlighter(mMap);
         highlighter.enableRoute(route);
+        currentVehicle = route.vehicle;
     }
 
     //Christian's Code
@@ -550,7 +588,7 @@ public class MainActivity extends FragmentActivity {
                 }else{
                     Location myLocation = mMap.getMyLocation();
 
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), (float) 14.5));
+                   mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), (float) 14.5));
                 }
 
                 return true;
