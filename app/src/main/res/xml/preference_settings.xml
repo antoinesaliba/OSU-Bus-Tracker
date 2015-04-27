@@ -1,5 +1,12 @@
 <!--?xml version="1.0" encoding="utf-8"?-->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="clocation"
+        android:title="Show my Current Location"
+        android:summary="While enable, show your current location in the map"
+        android:defaultValue="false">
+    </CheckBoxPreference>
+
     <ListPreference
         android:key="droute"
         android:title="Default Route"

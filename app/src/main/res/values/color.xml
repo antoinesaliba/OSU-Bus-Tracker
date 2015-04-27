@@ -6,4 +6,8 @@
     <color name="list_divider">#272727</color>
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
+
+    <color name="route_color_green">#FF75A800</color>
+    <color name="route_color_blue">#ff367ac5</color>
+    <color name="route_color_1a">#ffc557a0</color>
 </resources>

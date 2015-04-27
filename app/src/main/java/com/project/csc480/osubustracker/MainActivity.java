@@ -46,6 +46,8 @@ public class MainActivity extends FragmentActivity {
     //Creating the route objects
     BusRoute blueRoute = new BusRoute("blueRoute");
     BusRoute greenRoute = new BusRoute("greenRoute");
+    BusRoute walmart1A = new BusRoute("walmart1A");
+    BusRoute walmart1B = new BusRoute("walmart1B");
 
 
     ActionBarDrawerToggle mDrawerToggle;
@@ -69,6 +71,11 @@ public class MainActivity extends FragmentActivity {
         blueRoute.loadRoute();
         //Loading the route points and the bus stops
         greenRoute.loadRoute();
+
+        walmart1A.loadRoute();
+
+        walmart1B.loadRoute();
+
         dataSource = new NotificationDataSource(this);
         dataSource.open();
         setUpDrawerNavigation();
@@ -135,7 +142,7 @@ public class MainActivity extends FragmentActivity {
         // Add Drawer Item to dataList
         //dataList.add(new DrawerItem(true)); // adding a spinner to the list
 
-        //dataList.add(new DrawerItem("My Location", R.drawable.ic_launcher));
+        dataList.add(new NavDrawerItem("My Location", R.drawable.ic_launcher));
 
         dataList.add(new NavDrawerItem("Laker")); // adding a header to the list
         dataList.add(new NavDrawerItem("Blue Route", R.drawable.ic_launcher));
@@ -186,6 +193,7 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 
+
     }
 
 
@@ -209,7 +217,7 @@ public class MainActivity extends FragmentActivity {
             case R.id.action_about_us:
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();
                 alertDialog.setTitle("CentrOz");
-                alertDialog.setMessage("Created by:\nAlex Merluzzi, Antoine Saliba, Christian Shank, Lucas Neubert, Molly Boardman, Pranay Chapagain, Rafaela da Fonseca, Scott Millspaugh");
+                alertDialog.setMessage("Created by:\nAlex Merluzzi, Antoine Saliba, Christian Shank, Lucas Neubert, Molly Boardman, Pranay Chapagain, Rafaela Fonseca, Scott Millspaugh");
                 alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Close", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //finish();
@@ -282,20 +290,35 @@ public class MainActivity extends FragmentActivity {
      * */
     private void displayView(int position) {
 
+        if(position != 0)
+            myCurrentLocationSettings(); // getting the info accordingly to the settings
+
         switch (position) {
-            case 1:
-                if(!currentVehicle.getVehicleName().equals(blueRoute))
-                    currentVehicle.stopLoadingPosition();
-                changeRoute(blueRoute, false);
-                blueRoute.vehicle.loadMapPosition(mMap);
+            case 0:
+                mMap.clear();
+                mMap.setMyLocationEnabled(true);
                 break;
             case 2:
-                if(!currentVehicle.getVehicleName().equals(greenRoute))
+                if(!currentVehicle.getVehicleName().equals(blueRoute))
                     currentVehicle.stopLoadingPosition();
-                changeRoute(greenRoute, true);
-                //greenRoute.vehicle.loadMapPosition(mMap);
+                changeRoute(blueRoute);
+                blueRoute.vehicle.loadMapPosition(mMap);
                 break;
             case 3:
+                if(!currentVehicle.getVehicleName().equals(greenRoute))
+                    currentVehicle.stopLoadingPosition();
+                changeRoute(greenRoute);
+                //greenRoute.vehicle.loadMapPosition(mMap);
+                break;
+            case 5:
+                if(!currentVehicle.getVehicleName().equals(walmart1A))
+                    currentVehicle.stopLoadingPosition();
+                changeRoute(walmart1A);
+                break;
+            case 6:
+                if(!currentVehicle.getVehicleName().equals(walmart1B))
+                    currentVehicle.stopLoadingPosition();
+                changeRoute(walmart1B);
                 break;
             default:
                 break;
@@ -309,10 +332,10 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    public void changeRoute(BusRoute route, boolean g){ //changes the current route being highlighted on the map
+    public void changeRoute(BusRoute route){ //changes the current route being highlighted on the map
         mMap.clear();
         highlighter = new RouteHighlighter(mMap);
-        highlighter.enableRoute(route, g);
+        highlighter.enableRoute(route);
     }
 
     //Christian's Code
@@ -368,6 +391,7 @@ public class MainActivity extends FragmentActivity {
 
                 setDefaultRoute();
                 setDefaultMapStyle();
+                myCurrentLocationSettings();
 
                 //this returns whether the user has specified repeating notifications
                 boolean rNote = settings.getBoolean("rnote", false);
@@ -393,12 +417,22 @@ public class MainActivity extends FragmentActivity {
         String dRoute = settings.getString("droute", "1");
         if(dRoute.equals("1")) {
             currentVehicle = blueRoute.vehicle;
-            displayView(1); // Blue Route
+            displayView(2); // Blue Route
 
         }
         else if(dRoute.equals("2")) {
-            //currentVehicle = greenRoute.vehicle;
-            displayView(2); // Green Route
+            currentVehicle = greenRoute.vehicle;
+            displayView(3); // Green Route
+
+        }
+        else if(dRoute.equals("3")) {
+            currentVehicle = walmart1A.vehicle;
+            displayView(5); // walmart 1A
+
+        }
+        else if(dRoute.equals("4")) {
+            currentVehicle = walmart1B.vehicle;
+            displayView(6); // walmart 1A
 
         }
 
@@ -416,6 +450,17 @@ public class MainActivity extends FragmentActivity {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
+    private void myCurrentLocationSettings()
+    {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        //this returns the preferred map style
+        boolean cLocation = settings.getBoolean("clocation", false);
+
+        if(cLocation)
+            mMap.setMyLocationEnabled(true);
+        else
+            mMap.setMyLocationEnabled(false);
+    }
     /*public void clearNotifications() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         boolean clearAll = settings.getBoolean("cnote", false);
@@ -467,8 +512,8 @@ public class MainActivity extends FragmentActivity {
     private void setUpMap(GoogleMap map) {
 
 
-        //map.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
+        //mMap.setMyLocationEnabled(true);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.453838, -76.540628), (float) 14.5)); //CAMPUS CENTER
 
         setDefaultMapStyle();
 
