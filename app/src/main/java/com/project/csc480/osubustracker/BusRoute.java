@@ -76,7 +76,7 @@ public class BusRoute {
             busStops.add(new BusStop("Oneida", new LatLng(43.44964763983892, -76.55072271823883),new LatLng(43.44964763983892, -76.55072271823883), 8));
             busStops.add(new BusStop("Rudolph Road Stop", new LatLng(43.45140790787459, -76.54988050460815),new LatLng(43.45140790787459, -76.54988050460815), 9));
             busStops.add(new BusStop("Rudolph Road Stop", new LatLng(43.45266966140318, -76.54818534851074),new LatLng(43.45266966140318, -76.54818534851074), 10));
-            busStops.add(new BusStop("Librarys", new LatLng(43.4541507104548, -76.54450535774231),new LatLng(43.4542507104548, -76.54474139213562), 11));
+//          busStops.add(new BusStop("Librarys", new LatLng(43.4541507104548, -76.54450535774231),new LatLng(43.4542507104548, -76.54474139213562), 11));
             busStops.add(new BusStop("Library", new LatLng(43.45430522865038, -76.543599),new LatLng(43.45430522865038, -76.543599), 12));
             busStops.add(new BusStop("Waterbury", new LatLng(43.45654432636253, -76.54002070426941),new LatLng(43.45654432636253, -76.54002070426941), 13));
 
