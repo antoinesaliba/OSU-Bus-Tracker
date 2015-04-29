@@ -33,7 +33,7 @@ public class NotificationMaker {
                 boolean notificationExists = checkIfNotificationExists(marker.getTitle());
 
                 // check if a notification already exists for that particular bus stop
-                if (!notificationExists) {
+                if (!notificationExists && !marker.getTitle().equals("Bus")) {
 
                     //t.setTheme(R.style.MyTheme);
                     final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
@@ -41,9 +41,6 @@ public class NotificationMaker {
                             .setMessage("Would like to be notified when the bus is close to " + marker.getTitle() + "?")
                             .setPositiveButton(R.string.createNotification, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-
-                                    //Notification Maker using the AlertManager (to be tested)
-                                    if (!marker.getTitle().equals("Bus")) {
 
                                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon_orange));
                                         Toast.makeText(t, "Notification Created!", Toast.LENGTH_SHORT).show();
@@ -72,7 +69,6 @@ public class NotificationMaker {
                                         pendingIntent = PendingIntent.getBroadcast(t, notificationId, alarmIntent, 0);
                                         manager = (AlarmManager) t.getSystemService(t.ALARM_SERVICE);
                                         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-                                    }
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -85,7 +81,7 @@ public class NotificationMaker {
 
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#17A5F7"));
                     alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#17A5F7"));
-                } else {
+                } else if (notificationExists && !marker.getTitle().equals("Bus")){
                     final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                             .setTitle("Delete Notification")
                             .setMessage("A notification for this bus stop already exists. Would you like to delete it?")
