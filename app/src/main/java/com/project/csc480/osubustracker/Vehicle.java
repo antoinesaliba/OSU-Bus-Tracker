@@ -11,6 +11,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 
+
+
 /**
  * Created by rafaelamfonseca on 3/2/15.
  * Edited by Lucas Neubert on 4/6/15
@@ -21,7 +23,7 @@ public class Vehicle {
     ArrayList<LatLng> mapPosition = new ArrayList<LatLng>();
 
     GoogleMap mapAux;
-    Marker vehicleMarkerAux, vehicleArrowAux;
+    Marker vehicleMarkerAux;
 
     boolean keepDoing = true;
 
@@ -43,15 +45,15 @@ public class Vehicle {
 
 
     public void loadMapPosition(GoogleMap mMap) {
-        Marker vehicleMarker, vehicleArrow;
+        Marker vehicleMarker;
         //manager = m;
 
-        vehicleArrow = mMap.addMarker(new MarkerOptions()
+/*        vehicleArrow = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .title("Bus")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busarrow)));
 
-        vehicleArrow.setAnchor(0.5f,0.5f);
+        vehicleArrow.setAnchor(0.5f,0.5f);*/
 
         vehicleMarker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
@@ -62,7 +64,7 @@ public class Vehicle {
 
         this.mapAux = mMap;
         this.vehicleMarkerAux = vehicleMarker;
-        this.vehicleArrowAux = vehicleArrow;
+//        this.vehicleArrowAux = vehicleArrow;
 
 
         this.tBusPosition = new threadBusPosition();
@@ -85,7 +87,7 @@ public class Vehicle {
 
             while (keepDoing) {
                     //sends the map, the vehicle marker, vehicle name, list of user desired notificaions and main activity context
-                    new XMLParser(mapAux, vehicleMarkerAux, vehicleArrowAux, vehicleName).execute();
+                    new XMLParser(mapAux, vehicleMarkerAux, /*vehicleArrowAux,*/ vehicleName).execute();
 
                 //When XMLParser returns lat and long, update the marker here.
                 try {

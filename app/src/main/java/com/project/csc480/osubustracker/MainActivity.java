@@ -45,6 +45,7 @@ public class MainActivity extends FragmentActivity {
     RouteHighlighter highlighter;
     public static NotificationDataSource dataSource;
     Vehicle currentVehicle;
+    //BusRoute currentRoute;
 
     //Creating the route objects
     BusRoute blueRoute = new BusRoute("blueRoute");
