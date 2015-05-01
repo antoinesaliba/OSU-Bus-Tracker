@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,14 +35,12 @@ public class NotificationMaker {
 
                 // check if a notification already exists for that particular bus stop
                 if (!notificationExists && !marker.getTitle().equals("Bus")) {
-
                     //t.setTheme(R.style.MyTheme);
                     final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                             .setTitle("Create Notification")
                             .setMessage("Would like to be notified when the bus is close to " + marker.getTitle() + "?")
                             .setPositiveButton(R.string.createNotification, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-
                                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon_orange));
                                         Toast.makeText(t, "Notification Created!", Toast.LENGTH_SHORT).show();
 

@@ -1,5 +1,6 @@
 package com.project.csc480.osubustracker;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,17 +43,21 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    RouteHighlighter highlighter;
+    public static GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    public static RouteHighlighter highlighter;
     public static NotificationDataSource dataSource;
+    public static ArrayList<Marker>notificationList;
     Vehicle currentVehicle = null;
+    public static boolean n;
     //BusRoute currentRoute;
 
     //Creating the route objects
-    BusRoute blueRoute = new BusRoute("blueRoute");
+    public static BusRoute blueRoute = new BusRoute("blueRoute");
     BusRoute greenRoute = new BusRoute("greenRoute");
     BusRoute walmart1A = new BusRoute("walmart1A");
     BusRoute walmart1B = new BusRoute("walmart1B");
+    public Activity activity = this;
+
 
 
     ActionBarDrawerToggle mDrawerToggle;
@@ -68,6 +74,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        n=true;
         if(isFirstTime()){
             Intent tutorialIntent = new Intent(getApplicationContext(), TutorialActivity.class);
             startActivity(tutorialIntent);

@@ -8,6 +8,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import org.w3c.dom.Document;
@@ -73,13 +75,14 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
                 id = Integer.parseInt(eElement.getElementsByTagName("id").item(0).getTextContent().trim());
                 lat = Double.parseDouble(eElement.getElementsByTagName("lat").item(0).getTextContent().trim());
                 lon = Double.parseDouble(eElement.getElementsByTagName("lon").item(0).getTextContent().trim());
-                if((lat-0.00004)<alertLat && alertLat<(lat+0.00004)|| (lon-0.00004)<alertLon && alertLon<(lon+0.00004)) { //temporary - will be replaced by the 'location range' comparision
+                if((lat-0.01)<alertLat && alertLat<(lat+0.01)|| (lon-0.01)<alertLon && alertLon<(lon+0.01)) { //temporary - will be replaced by the 'location range' comparision
                     launchNotification();
                     Intent alarmIntent = new Intent(context, AlarmReceiver.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), notificationId, alarmIntent, 0);
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
                     alarmManager.cancel(pendingIntent);
                     System.out.println("Notification deleted with id: " + notificationId);
+                    MainActivity.n=false;
                     try {
                         // try to delete the notification record from the database.
                         // If the app is closed, it wont be able to open the database
@@ -105,6 +108,8 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void launchNotification(){
+        changeIcon(notificationId);
+
         //Building the Notification
         long[] vibrationPattern = {0, 500, 250, 500} ;
 
@@ -133,6 +138,10 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
         manager = (android.app.NotificationManager) context.getSystemService(
                 context.NOTIFICATION_SERVICE);
         manager.notify(notificationId, builder.build());
+    }
+
+    private void changeIcon(Integer id){
+
     }
 }
 /*
