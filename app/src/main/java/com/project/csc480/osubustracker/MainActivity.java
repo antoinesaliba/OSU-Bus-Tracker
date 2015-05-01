@@ -68,6 +68,10 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(isFirstTime()){
+            Intent tutorialIntent = new Intent(getApplicationContext(), TutorialActivity.class);
+            startActivityForResult(tutorialIntent, 1);
+        }
         setContentView(R.layout.activity_main);
 
 
@@ -130,6 +134,16 @@ public class MainActivity extends FragmentActivity {
                 Log.d("myTag", "DB: Lost notification deleted " + notificationId);
             }
         }
+    }
+    
+     private boolean isFirstTime() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean firststartup = settings.getBoolean("firsttime", true);
+
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("firsttime", false);
+        editor.commit();
+        return firststartup;
     }
 
     private void setUpDrawerNavigation() {
@@ -218,6 +232,7 @@ public class MainActivity extends FragmentActivity {
                 Uri uriUrl = Uri.parse("http://www.centro.org/Schedules-Oswego.aspx");
                 Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
                 startActivity(launchBrowser);
+                return true;
             case R.id.action_about_us:
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();
                 alertDialog.setTitle("CentrOz");
@@ -233,6 +248,11 @@ public class MainActivity extends FragmentActivity {
 
 
                 alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#17A5F7"));
+                return true;
+            case R.id.action_help:
+                Intent tutorialIntent = new Intent(getApplicationContext(), TutorialActivity.class);
+                startActivityForResult(tutorialIntent, 1);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
