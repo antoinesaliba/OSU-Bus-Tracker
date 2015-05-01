@@ -44,7 +44,7 @@ public class MainActivity extends FragmentActivity {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     RouteHighlighter highlighter;
     public static NotificationDataSource dataSource;
-    Vehicle currentVehicle;
+    Vehicle currentVehicle = null;
     //BusRoute currentRoute;
 
     //Creating the route objects
@@ -294,6 +294,8 @@ public class MainActivity extends FragmentActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+
+
     /**
      * Slide menu item click listener
      * */
@@ -340,6 +342,7 @@ public class MainActivity extends FragmentActivity {
                 if(!currentVehicle.getVehicleName().equals("walmart1A"))
                     currentVehicle.stopLoadingPosition();
                 changeRoute(walmart1A);
+                walmart1A.vehicle.loadMapPosition(mMap);
                 break;
             case 6:
                 if(!currentVehicle.getVehicleName().equals("walmart1B"))
@@ -418,6 +421,9 @@ public class MainActivity extends FragmentActivity {
         dataSource.open();
         checkNotification();
         setUpMapIfNeeded();
+
+        if(currentVehicle != null)
+            currentVehicle.resumeLoadingPosition();
         /*} else {
             displayReconnect();
         }*/
@@ -436,6 +442,15 @@ public class MainActivity extends FragmentActivity {
         super.onRestart();
         dataSource.open();
         checkNotification();
+
+        if(currentVehicle != null)
+            currentVehicle.resumeLoadingPosition();
+    }
+
+    @Override
+    protected void onPause (){
+        super.onPause();
+        currentVehicle.pauseLoadingPosition();
     }
 
     //return from settings page

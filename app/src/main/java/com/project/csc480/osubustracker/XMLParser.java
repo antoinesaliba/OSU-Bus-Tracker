@@ -5,11 +5,7 @@ package com.project.csc480.osubustracker;
  * Edited by Lucas Neubert on 3/30/15.
  */
 
-import android.content.Context;
-
 import android.os.AsyncTask;
-import android.support.v4.app.NotificationCompat;
-
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -23,16 +19,15 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import android.app.NotificationManager;
 
 public class XMLParser extends AsyncTask<String, Void, String> {
 
     final String urlBlueRoute = "http://moxie.cs.oswego.edu/~osubus/blueRouteVehicle.xml";
+    final String urlA1Route = "http://moxie.cs.oswego.edu/~osubus/a1RouteVehicle.xml";
 
     GoogleMap map;
     Document doc;
@@ -73,6 +68,9 @@ public class XMLParser extends AsyncTask<String, Void, String> {
 
             if(vehicleName.equals("blueRoute")) {
                 url = urlBlueRoute;
+            }
+            if(vehicleName.equals("walmart1A")) {
+                url = urlA1Route;
             }
 
             //Log.i("XMLParser", "Parsing " + vehicleName);

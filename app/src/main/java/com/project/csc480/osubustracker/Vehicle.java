@@ -26,6 +26,7 @@ public class Vehicle {
     Marker vehicleMarkerAux;
 
     boolean keepDoing = true;
+    boolean paused = false;
 
     threadBusPosition tBusPosition;
 
@@ -74,6 +75,10 @@ public class Vehicle {
 
     }
 
+    public void pauseLoadingPosition() { this.paused = true; }
+
+    public void resumeLoadingPosition() { this.paused = false; }
+
     public void stopLoadingPosition(){
         this.keepDoing = false;
     }
@@ -86,18 +91,20 @@ public class Vehicle {
         public void run() {
 
             while (keepDoing) {
+                if(!paused){ //if app is paused, don't do the requests
                     //sends the map, the vehicle marker, vehicle name, list of user desired notificaions and main activity context
                     new XMLParser(mapAux, vehicleMarkerAux, /*vehicleArrowAux,*/ vehicleName).execute();
-
-                //When XMLParser returns lat and long, update the marker here.
-                try {
-                    Thread.sleep(DELAY);
-                } catch (InterruptedException e) {
-                    Log.i(TAG, "Interrupting and stopping the bus position Thread");
-                    return;
+                    Log.d(TAG, "Getting data from " + vehicleName);
+                    //When XMLParser returns lat and long, update the marker here.
+                    try {
+                        Thread.sleep(DELAY);
+                    } catch (InterruptedException e) {
+                        Log.i(TAG, "Interrupting and stopping the bus position Thread");
+                        return;
+                    }
                 }
             }
-            }
+        }
 
         }
  }
