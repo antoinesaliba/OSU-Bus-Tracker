@@ -49,6 +49,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity" />
+        <activity android:name=".TutorialActivity" />
         <activity
             android:name=".Reconnect"
             android:label="@string/title_activity_reconnect" >
