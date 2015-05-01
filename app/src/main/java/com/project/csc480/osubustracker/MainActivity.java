@@ -70,7 +70,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         if(isFirstTime()){
             Intent tutorialIntent = new Intent(getApplicationContext(), TutorialActivity.class);
-            startActivityForResult(tutorialIntent, 1);
+            startActivity(tutorialIntent);
         }
         setContentView(R.layout.activity_main);
 
@@ -251,7 +251,7 @@ public class MainActivity extends FragmentActivity {
                 return true;
             case R.id.action_help:
                 Intent tutorialIntent = new Intent(getApplicationContext(), TutorialActivity.class);
-                startActivityForResult(tutorialIntent, 1);
+                startActivity(tutorialIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
