@@ -424,16 +424,17 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //if(isConnected()) {
-        dataSource.open();
-        checkNotification();
-        setUpMapIfNeeded();
+		if(isConnected()) {
+			dataSource.open();
+			checkNotification();
+			setUpMapIfNeeded();
 
-        if(currentVehicle != null)
-            currentVehicle.resumeLoadingPosition();
-        /*} else {
-            displayReconnect();
-        }*/
+			if(currentVehicle != null)
+				currentVehicle.resumeLoadingPosition();
+		} else {
+            startActivity(new Intent(MainActivity.this, Reconnect.class));
+            finish();
+        }
     }
 
     @Override
