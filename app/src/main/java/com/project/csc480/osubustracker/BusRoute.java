@@ -21,9 +21,9 @@ public class BusRoute {
     LatLng centralPoint;
     float routeZoom;
 
-    public BusRoute(String routeName, Context c){
+    public BusRoute(String routeName){
         this.routeName = routeName;
-        this.vehicle = new Vehicle(routeName, c);
+        this.vehicle = new Vehicle(routeName);
     }
 
     public String getRouteName() {

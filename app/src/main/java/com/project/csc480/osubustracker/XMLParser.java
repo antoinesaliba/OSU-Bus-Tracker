@@ -48,11 +48,11 @@ public class XMLParser extends AsyncTask<String, Void, String> {
     DocumentBuilder dBuilder;
     float direction;
 
-    public XMLParser(GoogleMap mMap, Marker vehicleMarker, /*Marker vehicleArrow,*/ String vehicleName, Context c) {
+    public XMLParser(GoogleMap mMap, Marker vehicleMarker, /*Marker vehicleArrow,*/ String vehicleName) {
         try {
             dbFactory = DocumentBuilderFactory.newInstance();
             dBuilder = dbFactory.newDocumentBuilder();
-            context = c;
+            context = App.getContext();
             this.vehicleMarker = vehicleMarker;
             this.vehicleName = vehicleName;
 //            this.vehicleArrow = vehicleArrow;

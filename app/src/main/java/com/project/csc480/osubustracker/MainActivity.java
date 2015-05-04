@@ -57,10 +57,10 @@ public class MainActivity extends FragmentActivity {
     public Activity activity = this;
 
     //Creating the route objects
-    BusRoute blueRoute = new BusRoute("blueRoute", activity);
-    BusRoute greenRoute = new BusRoute("greenRoute", activity);
-    BusRoute walmart1A = new BusRoute("walmart1A", activity);
-    BusRoute walmart1B = new BusRoute("walmart1B", activity);
+    BusRoute blueRoute = new BusRoute("blueRoute");
+    BusRoute greenRoute = new BusRoute("greenRoute");
+    BusRoute walmart1A = new BusRoute("walmart1A");
+    BusRoute walmart1B = new BusRoute("walmart1B");
 
 
 
