@@ -50,15 +50,18 @@ public class MainActivity extends FragmentActivity {
     public static ArrayList<Marker>notificationList;
     BusRoute currentRoute = null;
     public static boolean UIChange;
+    public static boolean appNotConnected;
     Handler handler;
     //BusRoute currentRoute;
 
-    //Creating the route objects
-    public static BusRoute blueRoute = new BusRoute("blueRoute");
-    BusRoute greenRoute = new BusRoute("greenRoute");
-    BusRoute walmart1A = new BusRoute("walmart1A");
-    BusRoute walmart1B = new BusRoute("walmart1B");
     public Activity activity = this;
+
+    //Creating the route objects
+    BusRoute blueRoute = new BusRoute("blueRoute", activity);
+    BusRoute greenRoute = new BusRoute("greenRoute", activity);
+    BusRoute walmart1A = new BusRoute("walmart1A", activity);
+    BusRoute walmart1B = new BusRoute("walmart1B", activity);
+
 
 
 
@@ -77,6 +80,7 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UIChange = false;
+        appNotConnected = false;
 
         handler = new Handler();
 
@@ -119,6 +123,12 @@ public class MainActivity extends FragmentActivity {
         }
         final Runnable r = new Runnable() {
             public void run() {
+                if(appNotConnected) {
+                    //do things
+                    appNotConnected = false;
+                    startActivity(new Intent(MainActivity.this, Reconnect.class));
+                    finish();
+                }
                 if(UIChange) {
                     UIChange=false;
                     changeRoute(currentRoute);
@@ -423,7 +433,6 @@ public class MainActivity extends FragmentActivity {
         currentRoute = route;
     }
 
-    //Christian's Code
     public boolean isConnected() {
         ConnectivityManager cM = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if(cM.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) != null &&

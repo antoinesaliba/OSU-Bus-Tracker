@@ -1,5 +1,7 @@
 package com.project.csc480.osubustracker;
 
+import android.content.Context;
+
 import com.google.android.gms.maps.model.LatLng;
 
 
@@ -19,9 +21,9 @@ public class BusRoute {
     LatLng centralPoint;
     float routeZoom;
 
-    public BusRoute(String routeName){
+    public BusRoute(String routeName, Context c){
         this.routeName = routeName;
-        this.vehicle = new Vehicle(routeName);
+        this.vehicle = new Vehicle(routeName, c);
     }
 
     public String getRouteName() {

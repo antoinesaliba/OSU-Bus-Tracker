@@ -1,5 +1,6 @@
 package com.project.csc480.osubustracker;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -29,11 +30,13 @@ public class Vehicle {
     boolean paused = false;
 
     threadBusPosition tBusPosition;
+    Context context;
 
 
 
-    public Vehicle(String routeName) {
+    public Vehicle(String routeName, Context c) {
         this.vehicleName = routeName;
+        context = c;
     }
 
     public String getVehicleName() {
@@ -93,7 +96,7 @@ public class Vehicle {
             while (keepDoing) {
                 if(!paused){ //if app is paused, don't do the requests
                     //sends the map, the vehicle marker, vehicle name, list of user desired notificaions and main activity context
-                    new XMLParser(mapAux, vehicleMarkerAux, /*vehicleArrowAux,*/ vehicleName).execute();
+                    new XMLParser(mapAux, vehicleMarkerAux, /*vehicleArrowAux,*/ vehicleName, context).execute();
                     Log.d(TAG, "Getting data from " + vehicleName);
                     //When XMLParser returns lat and long, update the marker here.
                     try {
