@@ -58,10 +58,10 @@ public class Vehicle {
 
         vehicleMarker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
-                .title("Bus")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.busicon)));
 
         vehicleMarker.setAnchor(0.5f,0.5f);
+        vehicleMarker.hideInfoWindow();
 
         this.mapAux = mMap;
         this.vehicleMarkerAux = vehicleMarker;

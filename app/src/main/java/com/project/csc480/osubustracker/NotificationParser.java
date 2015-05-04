@@ -75,14 +75,14 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
                 id = Integer.parseInt(eElement.getElementsByTagName("id").item(0).getTextContent().trim());
                 lat = Double.parseDouble(eElement.getElementsByTagName("lat").item(0).getTextContent().trim());
                 lon = Double.parseDouble(eElement.getElementsByTagName("lon").item(0).getTextContent().trim());
-                if((lat-0.01)<alertLat && alertLat<(lat+0.01)|| (lon-0.01)<alertLon && alertLon<(lon+0.01)) { //temporary - will be replaced by the 'location range' comparision
+                if((lat-0.0001)<alertLat && alertLat<(lat+0.0001)|| (lon-0.0001)<alertLon && alertLon<(lon+0.0001)) { //temporary - will be replaced by the 'location range' comparision
                     launchNotification();
                     Intent alarmIntent = new Intent(context, AlarmReceiver.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), notificationId, alarmIntent, 0);
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
                     alarmManager.cancel(pendingIntent);
                     System.out.println("Notification deleted with id: " + notificationId);
-                    MainActivity.n=false;
+                    MainActivity.UIChange=true;
                     try {
                         // try to delete the notification record from the database.
                         // If the app is closed, it wont be able to open the database

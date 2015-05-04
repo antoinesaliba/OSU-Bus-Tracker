@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
@@ -47,8 +48,9 @@ public class MainActivity extends FragmentActivity {
     public static RouteHighlighter highlighter;
     public static NotificationDataSource dataSource;
     public static ArrayList<Marker>notificationList;
-    Vehicle currentVehicle = null;
-    public static boolean n;
+    BusRoute currentRoute = null;
+    public static boolean UIChange;
+    Handler handler;
     //BusRoute currentRoute;
 
     //Creating the route objects
@@ -74,7 +76,10 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        n=true;
+        UIChange = false;
+
+        handler = new Handler();
+
         if(isFirstTime()){
             Intent tutorialIntent = new Intent(getApplicationContext(), TutorialActivity.class);
             startActivity(tutorialIntent);
@@ -112,6 +117,18 @@ public class MainActivity extends FragmentActivity {
             NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRoute.vehicle, blueRoute);
             Log.i("MainActivity", "Setup passed...");
         }
+        final Runnable r = new Runnable() {
+            public void run() {
+                if(UIChange) {
+                    UIChange=false;
+                    changeRoute(currentRoute);
+                    currentRoute.vehicle.loadMapPosition(mMap);
+                }
+                handler.postDelayed(this, 10000);
+            }
+        };
+
+        handler.postDelayed(r, 10000);
     }
 
     @Override
@@ -334,26 +351,26 @@ public class MainActivity extends FragmentActivity {
                 mMap.setMyLocationEnabled(true);
                 break;
             case 2:
-                if(!currentVehicle.getVehicleName().equals("blueRoute"))
-                    currentVehicle.stopLoadingPosition();
+                if(!currentRoute.routeName.equals("blueRoute"))
+                    currentRoute.vehicle.stopLoadingPosition();
                 changeRoute(blueRoute);
                 blueRoute.vehicle.loadMapPosition(mMap);
                 break;
             case 3:
-                if(!currentVehicle.getVehicleName().equals("greenRoute"))
-                    currentVehicle.stopLoadingPosition();
+                if(!currentRoute.routeName.equals("greenRoute"))
+                    currentRoute.vehicle.stopLoadingPosition();
                 changeRoute(greenRoute);
                 //greenRoute.vehicle.loadMapPosition(mMap);
                 break;
             case 5:
-                if(!currentVehicle.getVehicleName().equals("walmart1A"))
-                    currentVehicle.stopLoadingPosition();
+                if(!currentRoute.routeName.equals("walmart1A"))
+                    currentRoute.vehicle.stopLoadingPosition();
                 changeRoute(walmart1A);
                 walmart1A.vehicle.loadMapPosition(mMap);
                 break;
             case 6:
-                if(!currentVehicle.getVehicleName().equals("walmart1B"))
-                    currentVehicle.stopLoadingPosition();
+                if(!currentRoute.routeName.equals("walmart1B"))
+                    currentRoute.vehicle.stopLoadingPosition();
                 changeRoute(walmart1B);
                 break;
             default:
@@ -361,7 +378,7 @@ public class MainActivity extends FragmentActivity {
         }
 
 
-        if(position != 0 && (currentVehicle.getVehicleName().equals("blueRoute") || currentVehicle.getVehicleName().equals("greenRoute")))
+        if(position != 0 && (currentRoute.vehicle.getVehicleName().equals("blueRoute") || currentRoute.vehicle.getVehicleName().equals("greenRoute")))
             checkDayOfWeek();
 
         // update selected item and title, then close the drawer
@@ -403,7 +420,7 @@ public class MainActivity extends FragmentActivity {
         mMap.clear();
         highlighter = new RouteHighlighter(mMap);
         highlighter.enableRoute(route);
-        currentVehicle = route.vehicle;
+        currentRoute = route;
     }
 
     //Christian's Code
@@ -429,8 +446,8 @@ public class MainActivity extends FragmentActivity {
 			checkNotification();
 			setUpMapIfNeeded();
 
-			if(currentVehicle != null)
-				currentVehicle.resumeLoadingPosition();
+			if(currentRoute.vehicle != null)
+                currentRoute.vehicle.resumeLoadingPosition();
 		} else {
             startActivity(new Intent(MainActivity.this, Reconnect.class));
             finish();
@@ -451,14 +468,14 @@ public class MainActivity extends FragmentActivity {
         dataSource.open();
         checkNotification();
 
-        if(currentVehicle != null)
-            currentVehicle.resumeLoadingPosition();
+        if(currentRoute.vehicle != null)
+            currentRoute.vehicle.resumeLoadingPosition();
     }
 
     @Override
     protected void onPause (){
         super.onPause();
-        currentVehicle.pauseLoadingPosition();
+        currentRoute.vehicle.pauseLoadingPosition();
     }
 
     //return from settings page
@@ -497,22 +514,22 @@ public class MainActivity extends FragmentActivity {
         //this returns the number associated with the root, for example: 1 = blue route
         String dRoute = settings.getString("droute", "1");
         if(dRoute.equals("1")) {
-            currentVehicle = blueRoute.vehicle;
+            currentRoute = blueRoute;
             displayView(2); // Blue Route
 
         }
         else if(dRoute.equals("2")) {
-            currentVehicle = greenRoute.vehicle;
+            currentRoute = greenRoute;
             displayView(3); // Green Route
 
         }
         else if(dRoute.equals("3")) {
-            currentVehicle = walmart1A.vehicle;
+            currentRoute = walmart1A;
             displayView(5); // walmart 1A
 
         }
         else if(dRoute.equals("4")) {
-            currentVehicle = walmart1B.vehicle;
+            currentRoute = walmart1B;
             displayView(6); // walmart 1A
 
         }
