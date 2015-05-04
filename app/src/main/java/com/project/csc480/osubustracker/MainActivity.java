@@ -1,6 +1,5 @@
 package com.project.csc480.osubustracker;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -34,8 +33,10 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,8 +55,6 @@ public class MainActivity extends FragmentActivity {
     Handler handler;
     //BusRoute currentRoute;
 
-    public Activity activity = this;
-
     //Creating the route objects
     BusRoute blueRoute = new BusRoute("blueRoute");
     BusRoute greenRoute = new BusRoute("greenRoute");
@@ -63,6 +62,7 @@ public class MainActivity extends FragmentActivity {
     BusRoute walmart1B = new BusRoute("walmart1B");
 
 
+    public static int displayPosition;
 
 
     ActionBarDrawerToggle mDrawerToggle;
@@ -119,6 +119,7 @@ public class MainActivity extends FragmentActivity {
             setDefaultRoute(); //based on settings, displays the prefered route and its vehicle icon
             //Notification Maker using the AlertManager
             NotificationMaker notificationManager = new NotificationMaker(mMap, MainActivity.this, blueRoute.vehicle, blueRoute);
+           // NotificationMaker notificationManager2 = new NotificationMaker(mMap, MainActivity.this, walmart1A.vehicle, walmart1A);
             Log.i("MainActivity", "Setup passed...");
         }
         final Runnable r = new Runnable() {
@@ -350,6 +351,8 @@ public class MainActivity extends FragmentActivity {
      * */
     private void displayView(int position) {
 
+        displayPosition = position;
+
         if(position != 0)
             myCurrentLocationSettings(); // getting the info accordingly to the settings
 
@@ -359,6 +362,8 @@ public class MainActivity extends FragmentActivity {
             case 0:
                 mMap.clear();
                 mMap.setMyLocationEnabled(true);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), (float) 14.5));
+                findClosestBusStop();
                 break;
             case 2:
                 if(!currentRoute.routeName.equals("blueRoute"))
@@ -399,6 +404,34 @@ public class MainActivity extends FragmentActivity {
     }
 
 
+    private void findClosestBusStop(){
+
+        BusRoute[] route = {blueRoute, greenRoute, walmart1A, walmart1B};
+        BusRoute auxRoute;
+
+        String [] routeNames = getResources().getStringArray(R.array.route_names);
+
+        for(int j = 0; j< route.length; j++)
+        {
+            auxRoute = route[j];
+
+            for(int i = 0; i < auxRoute.getBusStops().size(); i++)
+            {
+                // Add new marker to the Google Map Android API V2
+                mMap.addMarker(new MarkerOptions()
+                        .position(auxRoute.getBusStops().get(i).getCoordinates())
+                        .title(auxRoute.getBusStops().get(i).getName())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon)))
+                        .setSnippet("Routes:\n"+ routeNames[j]);
+
+
+            }
+        }
+
+    }
+
+
+
     private void checkDayOfWeek(){
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
@@ -407,7 +440,7 @@ public class MainActivity extends FragmentActivity {
         {
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();
             alertDialog.setTitle("Not Running Today");
-            alertDialog.setMessage("Hey, this route doesn't run on Sundays.");
+            alertDialog.setMessage("This route doesn't run on Sundays.");
             alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     //finish();
@@ -552,7 +585,7 @@ public class MainActivity extends FragmentActivity {
         String mStyle = settings.getString("mstyle", "1");
 
         if(mStyle.equals("1"))
-            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         else
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }

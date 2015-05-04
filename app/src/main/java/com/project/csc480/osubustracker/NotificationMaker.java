@@ -2,14 +2,13 @@ package com.project.csc480.osubustracker;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Notification;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.view.ContextThemeWrapper;
-import android.widget.Button;
+
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -34,7 +33,7 @@ public class NotificationMaker {
                 boolean notificationExists = checkIfNotificationExists(marker.getTitle());
 
                 // check if a notification already exists for that particular bus stop
-                if (!notificationExists && !marker.getTitle().equals("Bus")) {
+                if (!notificationExists && !marker.getTitle().equals("Bus") && MainActivity.displayPosition != 0) {
                     //t.setTheme(R.style.MyTheme);
                     final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                             .setTitle("Create Notification")
@@ -80,7 +79,7 @@ public class NotificationMaker {
 
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#17A5F7"));
                     alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#17A5F7"));
-                } else if (notificationExists && !marker.getTitle().equals("Bus")){
+                } else if (notificationExists && !marker.getTitle().equals("Bus") && MainActivity.displayPosition != 0){
                     final AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                             .setTitle("Delete Notification")
                             .setMessage("A notification for this bus stop already exists. Would you like to delete it?")
@@ -112,6 +111,24 @@ public class NotificationMaker {
                             .show();
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.parseColor("#17A5F7"));
                     alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#17A5F7"));
+                }
+                else if(MainActivity.displayPosition == 0){
+
+/*
+                   AlertDialog alertDialog = new AlertDialog.Builder(t, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).create();
+                    alertDialog.setTitle("Bus Stop Info");
+                    alertDialog.setMessage("In this Bus Stop you can get the:\n" +route.getRouteName()  );
+                    alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //finish();
+                        }
+                    });
+
+                    alertDialog.setIcon(R.drawable.notificationicon);
+                    alertDialog.show();
+
+                    alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#17A5F7"));
+*/
                 }
             }
         });

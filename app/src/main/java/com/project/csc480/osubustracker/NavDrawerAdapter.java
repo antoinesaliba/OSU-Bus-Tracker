@@ -2,7 +2,7 @@ package com.project.csc480.osubustracker;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +73,7 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
             drawerHolder.itemLayout.setVisibility(LinearLayout.INVISIBLE);
             drawerHolder.spinnerLayout.setVisibility(LinearLayout.INVISIBLE);
             drawerHolder.title.setText(dItem.getTitle());
-            Log.d("Getview", "Passed4");
+            //Log.d("Getview", "Passed4");
         } else {
 
             drawerHolder.headerLayout.setVisibility(LinearLayout.INVISIBLE);
@@ -83,7 +83,7 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
            // drawerHolder.icon.setImageDrawable(view.getResources().getDrawable(
              //       dItem.getImgResID()));
             drawerHolder.ItemName.setText(dItem.getItemName());
-            Log.d("Getview","Passed5");
+           // Log.d("Getview","Passed5");
         }
         return view;
     }
