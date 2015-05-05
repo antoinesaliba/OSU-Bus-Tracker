@@ -112,6 +112,7 @@ public class MainActivity extends FragmentActivity {
             finish();
             // if there is a network connection, continue on
         } else {
+            Log.w("MESSAGE", "YOOOOOO");
             setUpMapIfNeeded();
             // Getting reference to SupportMapFragment of the activity_main
             SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -636,15 +637,12 @@ public class MainActivity extends FragmentActivity {
      */
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
-            if (mMap != null) {
                 setUpMap(mMap); //sets up the initial, basic map with nothing on it
-            }
-        }
+
     }
 
 
