@@ -73,7 +73,7 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
 
     private void parse(){
         if(!isConnected()) {
-           ///RAFAELA ENTER YOUR CODE HERE
+            launchNoConnectionNotification();
         } else {
             try {
 
@@ -158,6 +158,42 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
         manager = (android.app.NotificationManager) context.getSystemService(
                 context.NOTIFICATION_SERVICE);
         manager.notify(notificationId, builder.build());
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void launchNoConnectionNotification() {
+
+        //Building the Notification
+        long[] vibrationPattern = {0, 500, 250, 500} ;
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setSmallIcon(R.drawable.notificationicon);
+        builder.setContentTitle("CentrOz");
+        builder.setContentText("Connection Lost! This can cause the app \n" +
+                               " to trigger your notifications at the wrong moment. \n"+
+                               "Try clearing all the notifications \n" +
+                               " and creating them again.");
+
+        //Sound and vibrate in the notification
+        Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(uri);
+        builder.setVibrate(vibrationPattern);
+
+        /* Goes to the app when clicked on the notification*/
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(resultPendingIntent);
+
+        builder.setAutoCancel(true);
+
+        manager = (android.app.NotificationManager) context.getSystemService(
+                context.NOTIFICATION_SERVICE);
+        manager.notify(0, builder.build());
     }
 
     private void changeIcon(Integer id){
