@@ -76,9 +76,9 @@ public class BusRoute {
             busStops.add(new BusStop("Shineman", new LatLng(43.454282, -76.539160),new LatLng(43.4548819, -76.5390339), 6, "Waterbury"));
             busStops.add(new BusStop("Village", new LatLng(43.44699935247679, -76.54906511306763),new LatLng(43.4469709, -76.5488651), 7, "Oneida"));
             busStops.add(new BusStop("Oneida", new LatLng(43.44964763983892, -76.55072271823883),new LatLng(43.44964763983892, -76.55072271823883), 8, "Rudolph Road Stop(Cayuga)"));
-            busStops.add(new BusStop("Rudolph Road Stop(Cayuga)", new LatLng(43.45140790787459, -76.54988050460815),new LatLng(43.45140790787459, -76.54988050460815), 9, "Village"));
+            busStops.add(new BusStop("Rudolph Road Stop(Cayuga)", new LatLng(43.45140790787459, -76.54988050460815),new LatLng(43.45140790787459, -76.54988050460815), 9, "Oneida"));
             busStops.add(new BusStop("Rudolph Road Stop", new LatLng(43.45266966140318, -76.54818534851074),new LatLng(43.45266966140318, -76.54818534851074), 10, "Rudolph Road Stop(Cayuga)"));
-            busStops.add(new BusStop("Library -> Campus Center", new LatLng(43.45430522865038, -76.543599),new LatLng(43.45430522865038, -76.543599), 12, "Rudolph Road Stop"));
+            busStops.add(new BusStop("Library -> Campus Center", new LatLng(43.45430522865038, -76.543599),new LatLng(43.45430522865038, -76.543599), 12, "Library -> Village"));
             busStops.add(new BusStop("Waterbury", new LatLng(43.45654432636253, -76.54002070426941),new LatLng(43.45654432636253, -76.54002070426941), 13, "Mary Walker"));
 
 
