@@ -51,7 +51,8 @@ public class NotificationMaker {
                                         Double lat = alertPosition.latitude;
                                         Double lon = alertPosition.longitude;
                                         // each bus stop has a unique notificationId to keep track of the notifications
-                                        Integer notificationId = route.getBusStops().get(route.getBusStopIndex(marker.getTitle())).getNotificationId();
+                                        Integer notificationId = busStop.getNotificationId();
+                                        String previousBusStop = busStop.getPreviousBusStop();
 
                                         Intent alarmIntent = new Intent(t, AlarmReceiver.class);
                                         alarmIntent.putExtra("vehicleName", vehicle.getVehicleName());
@@ -59,6 +60,7 @@ public class NotificationMaker {
                                         alarmIntent.putExtra("lat", lat);
                                         alarmIntent.putExtra("lon", lon);
                                         alarmIntent.putExtra("notificationId", notificationId);
+                                        alarmIntent.putExtra("previousBusStop", previousBusStop);
 
                                         //creates the notification record on the database
                                         MainActivity.dataSource.createNotification(marker.getTitle(), route.getRouteName(), notificationId);

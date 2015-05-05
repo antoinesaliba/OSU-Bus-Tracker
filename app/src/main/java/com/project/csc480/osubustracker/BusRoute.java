@@ -68,42 +68,41 @@ public class BusRoute {
 
         if(routeName.equals("blueRoute")) {
             //BLUE ROUTE BUS STOPS
-            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.4539526, -76.5405475), 1));
-            busStops.add(new BusStop("Mackin", new LatLng(43.454804, -76.53475284576416),new LatLng(43.4549406, -76.5348609), 2));
-            busStops.add(new BusStop("Johnson", new LatLng(43.45713231914716, -76.53761744499207),new LatLng(43.4571612, -76.5372736), 3));
-            busStops.add(new BusStop("Library", new LatLng(43.45436628708711, -76.54450535774231),new LatLng(43.454331, -76.5434586), 4));
-            busStops.add(new BusStop("Mary Walker", new LatLng(43.455475, -76.542743),new LatLng(43.4554639, -76.5424972), 5));
-            busStops.add(new BusStop("Shineman", new LatLng(43.454282, -76.539160),new LatLng(43.4548819, -76.5390339), 6));
-            busStops.add(new BusStop("Village", new LatLng(43.44699935247679, -76.54906511306763),new LatLng(43.4469709, -76.5488651), 7));
-            busStops.add(new BusStop("Oneida", new LatLng(43.44964763983892, -76.55072271823883),new LatLng(43.44964763983892, -76.55072271823883), 8));
-            busStops.add(new BusStop("Rudolph Road Stop", new LatLng(43.45140790787459, -76.54988050460815),new LatLng(43.45140790787459, -76.54988050460815), 9));
-            busStops.add(new BusStop("Rudolph Road Stop", new LatLng(43.45266966140318, -76.54818534851074),new LatLng(43.45266966140318, -76.54818534851074), 10));
-//          busStops.add(new BusStop("Librarys", new LatLng(43.4541507104548, -76.54450535774231),new LatLng(43.4542507104548, -76.54474139213562), 11));
-            busStops.add(new BusStop("Library", new LatLng(43.45430522865038, -76.543599),new LatLng(43.45430522865038, -76.543599), 12));
-            busStops.add(new BusStop("Waterbury", new LatLng(43.45654432636253, -76.54002070426941),new LatLng(43.45654432636253, -76.54002070426941), 13));
+            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.4539526, -76.5405475), 1, "Shineman"));
+            busStops.add(new BusStop("Mackin", new LatLng(43.454804, -76.53475284576416),new LatLng(43.4549406, -76.5348609), 2, "Campus Center"));
+            busStops.add(new BusStop("Johnson", new LatLng(43.45713231914716, -76.53761744499207),new LatLng(43.4571612, -76.5372736), 3, "Mackin"));
+            busStops.add(new BusStop("Library -> Village", new LatLng(43.45436628708711, -76.54450535774231),new LatLng(43.454331, -76.5434586), 4, "Mary Walker"));
+            busStops.add(new BusStop("Mary Walker", new LatLng(43.455475, -76.542743),new LatLng(43.4554639, -76.5424972), 5, "Waterbury"));
+            busStops.add(new BusStop("Shineman", new LatLng(43.454282, -76.539160),new LatLng(43.4548819, -76.5390339), 6, "Waterbury"));
+            busStops.add(new BusStop("Village", new LatLng(43.44699935247679, -76.54906511306763),new LatLng(43.4469709, -76.5488651), 7, "Oneida"));
+            busStops.add(new BusStop("Oneida", new LatLng(43.44964763983892, -76.55072271823883),new LatLng(43.44964763983892, -76.55072271823883), 8, "Rudolph Road Stop(Cayuga)"));
+            busStops.add(new BusStop("Rudolph Road Stop(Cayuga)", new LatLng(43.45140790787459, -76.54988050460815),new LatLng(43.45140790787459, -76.54988050460815), 9, "Village"));
+            busStops.add(new BusStop("Rudolph Road Stop", new LatLng(43.45266966140318, -76.54818534851074),new LatLng(43.45266966140318, -76.54818534851074), 10, "Rudolph Road Stop(Cayuga)"));
+            busStops.add(new BusStop("Library -> Campus Center", new LatLng(43.45430522865038, -76.543599),new LatLng(43.45430522865038, -76.543599), 12, "Rudolph Road Stop"));
+            busStops.add(new BusStop("Waterbury", new LatLng(43.45654432636253, -76.54002070426941),new LatLng(43.45654432636253, -76.54002070426941), 13, "Mary Walker"));
 
 
 
         }
         else if(routeName.equals("greenRoute")) {
             //GREEN ROUTE BUS STOPS
-            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.453838, -76.540628), 14));
-            busStops.add(new BusStop("Romney", new LatLng(43.447918, -76.534195),new LatLng(43.447918, -76.534195), 15));
-            busStops.add(new BusStop("Laker", new LatLng(43.446368, -76.53462409973145),new LatLng(43.446368, -76.53462409973145), 16));
-            busStops.add(new BusStop("Laker", new LatLng(43.44528569298516, -76.53571844100952),new LatLng(43.44528569298516, -76.53571844100952), 17));
+            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.453838, -76.540628), 14, ""));
+            busStops.add(new BusStop("Romney", new LatLng(43.447918, -76.534195),new LatLng(43.447918, -76.534195), 15, ""));
+            busStops.add(new BusStop("Laker", new LatLng(43.446368, -76.53462409973145),new LatLng(43.446368, -76.53462409973145), 16, ""));
+            busStops.add(new BusStop("Laker", new LatLng(43.44528569298516, -76.53571844100952),new LatLng(43.44528569298516, -76.53571844100952), 17, ""));
 
 
 
         }
         else if(routeName.equals("walmart1A")) {
             //GREEN ROUTE BUS STOPS
-            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.453838, -76.540628), 18));
-            busStops.add(new BusStop("Downtown", new LatLng(43.456607, -76.511054),new LatLng(43.456607, -76.511054), 19));
+            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.453838, -76.540628), 18, ""));
+            busStops.add(new BusStop("Downtown", new LatLng(43.456607, -76.511054),new LatLng(43.456607, -76.511054), 19, ""));
         }
         else if(routeName.equals("walmart1B")) {
             //GREEN ROUTE BUS STOPS
-            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.453838, -76.540628), 18));
-            busStops.add(new BusStop("Downtown", new LatLng(43.456607, -76.511054),new LatLng(43.456607, -76.511054), 19));
+            busStops.add(new BusStop("Campus Center", new LatLng(43.453838, -76.540628),new LatLng(43.453838, -76.540628), 18, ""));
+            busStops.add(new BusStop("Downtown", new LatLng(43.456607, -76.511054),new LatLng(43.456607, -76.511054), 19, ""));
         }
     }
 

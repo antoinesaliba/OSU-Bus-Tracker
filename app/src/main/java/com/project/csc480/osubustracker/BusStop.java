@@ -11,12 +11,14 @@ public class BusStop {
     LatLng alertPosition;
     Integer notificationId;
     boolean notification;
+    String previousBusStop;
 
-    public BusStop(String n, LatLng coordinates, LatLng alertPosition, Integer notificationId){
+    public BusStop(String n, LatLng coordinates, LatLng alertPosition, Integer notificationId, String previousBusStop){
         this.name = n;
         this.coordinates = coordinates;
         this.alertPosition = alertPosition;
         this.notificationId = notificationId;
+        this.previousBusStop = previousBusStop;
     }
 
     public LatLng getCoordinates() {
@@ -41,5 +43,9 @@ public class BusStop {
 
     public Integer getNotificationId() {
         return notificationId;
+    }
+
+    public String getPreviousBusStop() {
+        return previousBusStop;
     }
 }
