@@ -22,7 +22,7 @@ public class Reconnect extends Activity {
         setContentView(R.layout.activity_reconnect2);
         aD = new AlertDialog.Builder(this).create();
         aD.setTitle("No Connection");
-        aD.setMessage("Please make sure you are connected to the internet before running Centroz.");
+        aD.setMessage("Please make sure you are connected to the internet before using Centroz. Notifications will not work properly without an internet connection.");
         aD.setButton("Reload", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

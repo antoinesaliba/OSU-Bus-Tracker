@@ -41,7 +41,7 @@ public class NotificationMaker {
                             .setPositiveButton(R.string.createNotification, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.busstopicon_orange));
-                                        Toast.makeText(t, "Notification Created!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(t, "You will be notified when bus is close!", Toast.LENGTH_SHORT).show();
 
                                         BusStop busStop = route.getBusStops().get(route.getBusStopIndex(marker.getTitle()));
                                         busStop.notification = true;

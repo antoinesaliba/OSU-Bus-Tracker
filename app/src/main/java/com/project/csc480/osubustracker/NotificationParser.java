@@ -174,10 +174,7 @@ public class NotificationParser extends AsyncTask<String, Void, String> {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.drawable.notificationicon);
         builder.setContentTitle("CentrOz");
-        builder.setContentText("Connection Lost! This can cause the app \n" +
-                               " to trigger your notifications at the wrong moment. \n"+
-                               "Try clearing all the notifications \n" +
-                               " and creating them again.");
+        builder.setContentText("Connection Lost!");
 
         //Sound and vibrate in the notification
         Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
